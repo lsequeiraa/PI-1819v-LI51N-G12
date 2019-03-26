@@ -1,0 +1,27 @@
+{
+  "name": "yama",
+  "version": "1.0.0",
+  "description": "Yet Another Music Application",
+  "main": "lib/yama-server.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lsequeiraa/PI-1819v-LI51N-G12.git"
+  },
+  "author": "Grupo 12",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lsequeiraa/PI-1819v-LI51N-G12/issues"
+  },
+  "homepage": "https://github.com/lsequeiraa/PI-1819v-LI51N-G12#readme",
+  "dependencies": {
+    "debug": "^4.1.1",
+    "mocha": "^6.0.2",
+    "request": "^2.88.0"
+  }
+}
