@@ -27,7 +27,7 @@ describe('YamaService', () => {
             });
 
             context('on failure', () => {
-                it('should return an error if no artist name is given', () => {
+                it('should reject promise if no artist name is given', () => {
                     return expect(services.getArtists(undefined)).to.eventually.be.rejected;
                 });
             });
@@ -49,7 +49,7 @@ describe('YamaService', () => {
             });
 
             context('on failure', () => {
-                it('should return an error if no mbid is given', () => {
+                it('should reject promise if no mbid is given', () => {
                     return expect(services.getArtistTopAlbums(undefined)).to.eventually.be.rejected;
                 });
             });
@@ -71,7 +71,7 @@ describe('YamaService', () => {
             });
 
             context('on failure', () => {
-                it('should return an error if no mbid is given', () => {
+                it('should reject promise if no mbid is given', () => {
                     return expect(services.getAlbum(undefined)).to.eventually.be.rejected;
                 });
             });
