@@ -21,6 +21,7 @@
   "homepage": "https://github.com/lsequeiraa/PI-1819v-LI51N-G12#readme",
   "dependencies": {
     "chai": "^4.2.0",
+    "chai-as-promised": "^7.1.1",
     "debug": "^4.1.1",
     "mocha": "^6.0.2",
     "request": "^2.88.0"

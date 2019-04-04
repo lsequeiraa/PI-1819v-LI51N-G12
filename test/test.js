@@ -1,6 +1,10 @@
 /* eslint-disable */
 const describe = require('mocha').describe;
-const expect = require('chai').expect;
+const chai = require("chai");
+const chaiAsPromised = require("chai-as-promised");
+chai.use(chaiAsPromised);
+
+const expect = chai.expect;
 
 let services = new (require('./../lib/yama-services.js'))(new (require('./../lib/yama-db.js')), require('./../lib/lastfm.js'));
 
@@ -21,6 +25,12 @@ describe('YamaService', () => {
                         })
                 });
             });
+
+            context('on failure', () => {
+                it('should return an error if no artist name is given', () => {
+                    return expect(services.getArtists(undefined)).to.eventually.be.rejected;
+                });
+            });
         });
 
         describe('getArtistTopAlbums(arId, query)', () => {
@@ -37,6 +47,12 @@ describe('YamaService', () => {
                         })
                 });
             });
+
+            context('on failure', () => {
+                it('should return an error if no mbid is given', () => {
+                    return expect(services.getArtistTopAlbums(undefined)).to.eventually.be.rejected;
+                });
+            });
         });
 
         describe('getAlbum(alId)', () => {
@@ -45,8 +61,6 @@ describe('YamaService', () => {
                     return services.getAlbum('63b3a8ca-26f2-4e2b-b867-647a6ec2bebd')
                         .then((result) => {
                             expect(result).to.have.property('listeners');
-                            expect(result).to.have.property('playcount');
-                            expect(result).to.have.property('tracks');
 
                             let tracks = result.tracks;
 
@@ -55,7 +69,13 @@ describe('YamaService', () => {
                         })
                 });
             });
+
+            context('on failure', () => {
+                it('should return an error if no mbid is given', () => {
+                    return expect(services.getAlbum(undefined)).to.eventually.be.rejected;
+                });
+            });
         });
     });
-    
+
 });
