@@ -14,6 +14,9 @@ describe('YamaService', function() {
             context('on success', function() {
                 it('should return a valid list of artists if it exists', function(done) {
                     return services.getArtists({artist: 'Cher'}, function (err, result) {
+                        expect(result).to.have.property('totalResults');
+                        expect(result).to.have.property('artists').that.is.an('array');
+
                         let art1 = result.artists[0];
                         let art2 = result.artists[1];
 
@@ -53,8 +56,15 @@ describe('YamaService', function() {
             context('on success', function() {
                 it('should return a valid list of albums from a specific artist if it exists', function(done) {
                     return services.getArtistTopAlbums('bfcc6d75-a6a5-4bc6-8282-47aec8531818', null, function (err, result) {
+                        expect(result).to.have.property('totalResults');
+                        expect(result).to.have.property('albums').that.is.an('array');
+
                         let alb1 = result.albums[0];
                         let alb2 = result.albums[1];
+
+                        expect(alb1).to.have.property('name');
+                        expect(alb1).to.have.property('mbid');
+                        expect(alb1).to.have.property('playcount');
 
                         expect(alb1).to.include({name: 'Believe', mbid: '63b3a8ca-26f2-4e2b-b867-647a6ec2bebd'});
                         expect(alb2).to.include({name: 'The Very Best of Cher', mbid: 'a7e2dad7-e733-4bee-9db1-b31e3183eaf5'});
@@ -122,6 +132,115 @@ describe('YamaService', function() {
                 /*it('should reject promise if no mbid is given', () => {
                     return expect(services.getAlbum(undefined)).to.eventually.be.rejected;
                 });*/
+            });
+        });
+    });
+
+    describe('Yama-DB', function() {
+        describe('postPlaylist(body)', function() {
+            afterEach (function(done) {
+                if (this.currentTest.pId) {
+                    services.deletePlaylist(this.currentTest.pId, function(err) {
+                        if (err) done(err);
+                        else done();
+                    })
+                }
+            });
+            context('on success', function() {
+                it('should return the created playlist', function (done) {
+                    let name = 'testPostPlaying';
+                    let desc = 'best test!';
+                    return services.postPlaylist({name: name, description: desc}, function (err, result) {
+                        expect(result).to.include({name: name, description: desc});
+
+                        expect(result).to.have.property('id');
+                        expect(result).to.have.property('totalDuration');
+                        expect(result).to.have.property('tracks');
+
+                        this.test.pId = result.id;
+
+                        done();
+                    })
+                });
+            });
+        });
+
+        describe('putPlaylist(pId, body)', function() {
+            beforeEach (function(done) {
+                services.postPlaylist({name: 'testPutPlaylist', description: 'best test!'}, function(err, result) {
+                    if (err) done(err);
+                    else {
+                        this.currentTest.pId = result.id;
+                        done();
+                    }
+                })
+            });
+            afterEach (function(done) {
+                if (this.currentTest.pId) {
+                    services.deletePlaylist(this.currentTest.pId, function(err) {
+                        if (err) done(err);
+                        else done();
+                    })
+                }
+            });
+            context('on success', function() {
+                it('should return the edited playlist', function (done) {
+                    let name = 'editedPutPlaylist';
+                    let desc = 'better test!';
+                    return services.putPlaylist(this.test.pId,{name: name, description: desc}, function (err, result) {
+                        expect(result).to.include({name: name, description: desc});
+
+                        expect(result).to.have.property('id');
+                        expect(result).to.have.property('totalDuration');
+                        expect(result).to.have.property('tracks');
+
+                        this.test.pId = result.id;
+
+                        done();
+                    })
+                });
+            });
+        });
+
+        describe('getPlaylists()', function() {
+            context('on success', function() {
+                it('should return a valid list of playlists', function (done) {
+                    return services.getPlaylists(function (err, result) {
+                        expect(result).to.have.property('totalResults');
+                        expect(result).to.have.property('playlists').that.is.an('array');
+
+                        done();
+                    })
+                });
+            });
+        });
+
+        context('getPlaylists()', function() {
+            beforeEach (function(done) {
+                services.postPlaylist({name: 'testPutPlaylist', description: 'best test!'}, function(err, result) {
+                    if (err) done(err);
+                    else {
+                        this.currentTest.pId = result.id;
+                        done();
+                    }
+                })
+            });
+            afterEach (function(done) {
+                if (this.currentTest.pId) {
+                    services.deletePlaylist(this.currentTest.pId, function(err) {
+                        if (err) done(err);
+                        else done();
+                    })
+                }
+            });
+            context('on success', function() {
+                it('should return a valid playlist if it exists', function (done) {
+                    return services.getPlaylist(this.test.pId, function(err, result) {
+                        //Todo
+
+                        done();
+                    })
+                });
             });
         });
     });
