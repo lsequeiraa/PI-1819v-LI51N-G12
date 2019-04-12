@@ -263,7 +263,7 @@ describe('YamaService', function() {
         context('putPlaylistMusic(pId, mId, body)', function() {
             beforeEach (function(done) {
                 let that = this.currentTest;
-                that.name = 'testPutPlaylist';
+                that.name = 'testPutPlaylistMusic';
                 that.desc = 'best test!';
                 services.postPlaylist({name: that.name, description: that.desc}, function(err, result) {
                     if (err) done(err);
@@ -288,10 +288,57 @@ describe('YamaService', function() {
                         expect(result).to.include({name: that.name, description: that.desc});
 
                         expect(result).to.have.property('id', that.pId);
-                        expect(result).to.have.property('totalDuration', 24000);
-                        expect(result).to.have.property('tracks')
-                            .to.be.an('array')
-                            .that.includes({name: 'Believe', duration: '240000'});
+                        expect(result).to.have.property('totalDuration', 240000);
+                        expect(result).to.have.property('tracks').to.be.an('array');
+
+                        let tracks = result.tracks;
+                        expect(tracks[0]).to.have.property('mbid', '32ca187e-ee25-4f18-b7d0-3b6713f24635');
+                        expect(tracks[0]).to.have.property('name', 'Believe');
+                        expect(tracks[0]).to.have.property('duration', 240000);
+
+                        that.pId = result.id;
+
+                        done();
+                    });
+                });
+            });
+        });
+
+        context('deletePlaylistMusic(pId, mId, cb)', function() {
+            beforeEach (function(done) {
+                let that = this.currentTest;
+                that.name = 'testDeletePlaylistMusic';
+                that.desc = 'best test!';
+                services.postPlaylist({name: that.name, description: that.desc}, function(err, result) {
+                    if (err) done(err);
+                    else {
+                        that.pId = result.id;
+                        services.putPlaylistMusic(that.pId,'32ca187e-ee25-4f18-b7d0-3b6713f24635', function(err, result) {
+                            if (err) done(err);
+                            else {
+                                done();
+                            }
+                        })
+                    }
+                });
+            });
+            afterEach (function(done) {
+                if (this.currentTest.pId) {
+                    services.deletePlaylist(this.currentTest.pId, function(err) {
+                        if (err) done(err);
+                        else done();
+                    })
+                }
+            });
+            context('on success', function() {
+                it('should return the edited playlist if it exists', function (done) {
+                    let that = this.test;
+                    return services.deletePlaylistMusic(this.test.pId,'32ca187e-ee25-4f18-b7d0-3b6713f24635', function (err, result) {
+                        expect(result).to.include({name: that.name, description: that.desc});
+
+                        expect(result).to.have.property('id', that.pId);
+                        expect(result).to.have.property('totalDuration', 0);
+                        expect(result).to.have.property('tracks').to.be.an('array').to.be.empty;
 
                         that.pId = result.id;
 
