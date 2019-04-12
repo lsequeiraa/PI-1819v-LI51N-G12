@@ -287,9 +287,11 @@ describe('YamaService', function() {
                     return services.putPlaylistMusic(this.test.pId,'32ca187e-ee25-4f18-b7d0-3b6713f24635', function (err, result) {
                         expect(result).to.include({name: that.name, description: that.desc});
 
-                        expect(result).to.have.property('id').to.include(that.pId);
-                        expect(result).to.have.property('totalDuration').to.include('24000');
-                        expect(result).to.have.property('tracks').and.to.have.members([{name: 'Believe', duration: '240000'}]);
+                        expect(result).to.have.property('id', that.pId);
+                        expect(result).to.have.property('totalDuration', 24000);
+                        expect(result).to.have.property('tracks')
+                            .to.be.an('array')
+                            .that.includes({name: 'Believe', duration: '240000'});
 
                         that.pId = result.id;
 
