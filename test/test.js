@@ -367,7 +367,7 @@ describe('YamaService', function() {
                     if (err) done(err);
                     else {
                         that.pId = result.id;
-                        services.putPlaylistMusic(that.pId,'32ca187e-ee25-4f18-b7d0-3b6713f24635', function(err, result) {
+                        services.putPlaylistMusic(that.pId,{artist: 'Cher', name: 'Believe'}, function(err, result) {
                             if (err) done(err);
                             else {
                                 done();
