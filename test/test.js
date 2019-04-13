@@ -338,7 +338,7 @@ describe('YamaService', function() {
             context('on success', function() {
                 it('should return the edited playlist if it exists', function (done) {
                     let that = this.test;
-                    return services.putPlaylistMusic(this.test.pId,'32ca187e-ee25-4f18-b7d0-3b6713f24635', function (err, result) {
+                    return services.putPlaylistMusic(this.test.pId,{artist: 'Cher', name: 'Believe'}, function (err, result) {
                         expect(result).to.include({name: that.name, description: that.desc});
 
                         expect(result).to.have.property('id', that.pId);
