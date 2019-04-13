@@ -196,9 +196,9 @@ describe('YamaService', function() {
                     return services.putPlaylist(this.test.pId,{name: name, description: desc}, function (err, result) {
                         expect(result).to.include({name: name, description: desc});
 
-                        expect(result).to.have.property('id');
-                        expect(result).to.have.property('totalDuration');
-                        expect(result).to.have.property('tracks');
+                        expect(result).to.have.property('id', that.pId);
+                        //expect(result).to.have.property('totalDuration');
+                        //expect(result).to.have.property('tracks');
 
                         that.pId = result.id;
 
@@ -209,11 +209,65 @@ describe('YamaService', function() {
         });
 
         describe('getPlaylists()', function() {
+            beforeEach (function(done) {
+                let that = this.currentTest;
+                that.ids = [];
+
+                return services.postPlaylist({name: 'testPutPlaylist', description: 'best test!'}, function(err, result) {
+                    if (err) done(err);
+                    else {
+                        that.ids.push(result.id);
+                        services.postPlaylist({name: 'testPutPlaylist', description: 'best test!'}, function(err, result) {
+                            if (err) done(err);
+                            else {
+                                that.ids.push(result.id);
+                                services.postPlaylist({
+                                    name: 'testPutPlaylist',
+                                    description: 'best test!'
+                                }, function (err, result) {
+                                    if (err) done(err);
+                                    else {
+                                        that.ids.push(result.id);
+                                        services.postPlaylist({
+                                            name: 'testPutPlaylist',
+                                            description: 'best test!'
+                                        }, function (err, result) {
+                                            if (err) done(err);
+                                            else {
+                                                that.ids.push(result.id);
+                                                done();
+                                            }
+                                        })
+                                    }
+                                })
+                            }
+                        })
+                    }
+                })
+            });
+            afterEach (function(done) {
+                let that = this.currentTest;
+                if (that.ids) {
+                    return services.deletePlaylist(that.ids[0], function(err) {
+                        if (err) done(err);
+                        else services.deletePlaylist(that.ids[1], function (err) {
+                            if (err) done(err);
+                            else services.deletePlaylist(that.ids[2], function (err) {
+                                if (err) done(err);
+                                else services.deletePlaylist(that.ids[3], function (err) {
+                                    if (err) done(err);
+                                    else done();
+                                })
+                            })
+                        })
+                    })
+                }
+            });
             context('on success', function() {
                 it('should return a valid list of playlists', function (done) {
                     return services.getPlaylists(function (err, result) {
                         expect(result).to.have.property('totalResults');
-                        expect(result).to.have.property('playlists').that.is.an('array');
+                        expect(result).to.have.property('playlists').that.is.an('array').to.have.lengthOf.at.least(4);
 
                         done();
                     })
@@ -248,7 +302,7 @@ describe('YamaService', function() {
                     return services.getPlaylist(this.test.pId, function(err, result) {
                         expect(result).to.include({name: that.name, description: that.desc});
 
-                        expect(result).to.have.property('id').to.include(that.pId);
+                        expect(result).to.have.property('id', that.pId);
                         expect(result).to.have.property('totalDuration');
                         expect(result).to.have.property('tracks');
 
