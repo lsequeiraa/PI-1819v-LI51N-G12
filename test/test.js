@@ -213,23 +213,23 @@ describe('YamaService', function() {
                 let that = this.currentTest;
                 that.ids = [];
 
-                return services.postPlaylist({name: 'testPutPlaylist', description: 'best test!'}, function(err, result) {
+                return services.postPlaylist({name: 'testGetPlaylists1', description: 'best test!'}, function(err, result) {
                     if (err) done(err);
                     else {
                         that.ids.push(result.id);
-                        services.postPlaylist({name: 'testPutPlaylist', description: 'best test!'}, function(err, result) {
+                        services.postPlaylist({name: 'testGetPlaylists2', description: 'best test!'}, function(err, result) {
                             if (err) done(err);
                             else {
                                 that.ids.push(result.id);
                                 services.postPlaylist({
-                                    name: 'testPutPlaylist',
+                                    name: 'testGetPlaylists3',
                                     description: 'best test!'
                                 }, function (err, result) {
                                     if (err) done(err);
                                     else {
                                         that.ids.push(result.id);
                                         services.postPlaylist({
-                                            name: 'testPutPlaylist',
+                                            name: 'testGetPlaylists4',
                                             description: 'best test!'
                                         }, function (err, result) {
                                             if (err) done(err);
@@ -265,12 +265,14 @@ describe('YamaService', function() {
             });
             context('on success', function() {
                 it('should return a valid list of playlists', function (done) {
-                    return services.getPlaylists(function (err, result) {
-                        expect(result).to.have.property('totalResults');
-                        expect(result).to.have.property('playlists').that.is.an('array').to.have.lengthOf.at.least(4);
+                    setTimeout(function(){
+                        return services.getPlaylists(function (err, result) {
+                            expect(result).to.have.property('totalResults');
+                            expect(result).to.have.property('playlists').that.is.an('array').to.have.lengthOf.at.least(4);
 
-                        done();
-                    })
+                            done();
+                        })
+                    }, 2000);
                 });
             });
         });
