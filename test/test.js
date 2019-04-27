@@ -5,8 +5,9 @@ const chai = require("chai");
 chai.use(chaiAsPromised);*/
 
 const expect = chai.expect;
+const should = chai.should();
 
-let services = new (require('./../lib/yama-services.js'))(new (require('./../lib/yama-db.js')), require('./../lib/lastfm-mock.js'));
+let services = new (require('./../lib/yama-services.js'))(new (require('./../lib/yama-db.js')), require('./../lib/lastfm.js'));
 
 describe('YamaService', function() {
     describe('Last.fm', function() {
@@ -137,16 +138,16 @@ describe('YamaService', function() {
     });
 
     describe('Yama-DB', function() {
-        describe('postPlaylist(body)', function() {
-            afterEach (function(done) {
-                if (this.currentTest.pId) {
-                    return services.deletePlaylist(this.currentTest.pId, function(err) {
-                        if (err) done(err);
-                        else done();
-                    })
-                }
-            });
-            context('on success', function() {
+        describe('postPlaylist(body)', function () {
+            context('on success', function () {
+                afterEach(function (done) {
+                    if (this.currentTest.pId) {
+                        return services.deletePlaylist(this.currentTest.pId, function (err) {
+                            if (err) done(err);
+                            else done();
+                        })
+                    }
+                });
                 it('should return the created playlist', function (done) {
                     let that = this.test;
 
@@ -165,13 +166,44 @@ describe('YamaService', function() {
                     })
                 });
             });
+            context('on failure', function () {
+                it('should send an error if no name is provided', function (done) {
+                    let desc = 'best test!';
+                    return services.postPlaylist({description: desc}, function (err, result) {
+                        should.exist(err);
+                        expect(err).to.have.property('code');
+
+                        done();
+                    });
+                });
+                it('should send an error if no description is provided', function (done) {
+                    let name = 'testPostPlaying';
+                    return services.postPlaylist({name: name}, function (err, result) {
+                        should.exist(err);
+                        expect(err).to.have.property('code');
+
+                        done();
+                    });
+                });
+                it('should send an error if no body is provided', function (done) {
+                    return services.postPlaylist(null, function (err, result) {
+                        should.exist(err);
+                        expect(err).to.have.property('code');
+
+                        done();
+                    });
+                });
+            });
         });
 
-        describe('putPlaylist(pId, body)', function() {
-            beforeEach (function(done) {
+        describe('putPlaylist(pId, body)', function () {
+            beforeEach(function (done) {
                 let that = this.currentTest;
 
-                return services.postPlaylist({name: 'testPutPlaylist', description: 'best test!'}, function(err, result) {
+                return services.postPlaylist({
+                    name: 'testPutPlaylist',
+                    description: 'best test!'
+                }, function (err, result) {
                     if (err) done(err);
                     else {
                         that.pId = result.id;
@@ -179,21 +211,24 @@ describe('YamaService', function() {
                     }
                 })
             });
-            afterEach (function(done) {
+            afterEach(function (done) {
                 if (this.currentTest.pId) {
-                    return services.deletePlaylist(this.currentTest.pId, function(err) {
+                    return services.deletePlaylist(this.currentTest.pId, function (err) {
                         if (err) done(err);
                         else done();
                     })
                 }
             });
-            context('on success', function() {
+            context('on success', function () {
                 it('should return the edited playlist if it exists', function (done) {
                     let that = this.test;
 
                     let name = 'editedPutPlaylist';
                     let desc = 'better test!';
-                    return services.putPlaylist(this.test.pId,{name: name, description: desc}, function (err, result) {
+                    return services.putPlaylist(this.test.pId, {
+                        name: name,
+                        description: desc
+                    }, function (err, result) {
                         expect(result).to.include({name: name, description: desc});
 
                         expect(result).to.have.property('id', that.pId);
@@ -206,18 +241,38 @@ describe('YamaService', function() {
                     })
                 });
             });
+            context('on failure', function () {
+                it('should send an error if index doesnt exist', function (done) {
+                    let that = this.test;
+
+                    let name = 'editedPutPlaylist';
+                    let desc = 'better test!';
+                    return services.putPlaylist('thisindexshouldntexist', {name: name, description: desc}, function (err, result) {
+                        should.exist(err);
+                        expect(err).to.have.property('code');
+
+                        done();
+                    })
+                });
+            });
         });
 
-        describe('getPlaylists()', function() {
-            beforeEach (function(done) {
+        describe('getPlaylists()', function () {
+            beforeEach(function (done) {
                 let that = this.currentTest;
                 that.ids = [];
 
-                return services.postPlaylist({name: 'testGetPlaylists1', description: 'best test!'}, function(err, result) {
+                return services.postPlaylist({
+                    name: 'testGetPlaylists1',
+                    description: 'best test!'
+                }, function (err, result) {
                     if (err) done(err);
                     else {
                         that.ids.push(result.id);
-                        services.postPlaylist({name: 'testGetPlaylists2', description: 'best test!'}, function(err, result) {
+                        services.postPlaylist({
+                            name: 'testGetPlaylists2',
+                            description: 'best test!'
+                        }, function (err, result) {
                             if (err) done(err);
                             else {
                                 that.ids.push(result.id);
@@ -245,10 +300,10 @@ describe('YamaService', function() {
                     }
                 })
             });
-            afterEach (function(done) {
+            afterEach(function (done) {
                 let that = this.currentTest;
                 if (that.ids) {
-                    return services.deletePlaylist(that.ids[0], function(err) {
+                    return services.deletePlaylist(that.ids[0], function (err) {
                         if (err) done(err);
                         else services.deletePlaylist(that.ids[1], function (err) {
                             if (err) done(err);
@@ -263,9 +318,9 @@ describe('YamaService', function() {
                     })
                 }
             });
-            context('on success', function() {
+            context('on success', function () {
                 it('should return a valid list of playlists', function (done) {
-                    setTimeout(function(){
+                    setTimeout(function () {
                         return services.getPlaylists(function (err, result) {
                             expect(result).to.have.property('totalResults');
                             expect(result).to.have.property('playlists').that.is.an('array').to.have.lengthOf.at.least(4);
@@ -277,12 +332,12 @@ describe('YamaService', function() {
             });
         });
 
-        context('getPlaylist(pId)', function() {
-            beforeEach (function(done) {
+        context('getPlaylist(pId)', function () {
+            beforeEach(function (done) {
                 let that = this.currentTest;
                 that.name = 'testPutPlaylist';
                 that.desc = 'best test!';
-                services.postPlaylist({name: that.name, description: that.desc}, function(err, result) {
+                services.postPlaylist({name: that.name, description: that.desc}, function (err, result) {
                     if (err) done(err);
                     else {
                         that.pId = result.id;
@@ -290,18 +345,18 @@ describe('YamaService', function() {
                     }
                 })
             });
-            afterEach (function(done) {
+            afterEach(function (done) {
                 if (this.currentTest.pId) {
-                    services.deletePlaylist(this.currentTest.pId, function(err) {
+                    services.deletePlaylist(this.currentTest.pId, function (err) {
                         if (err) done(err);
                         else done();
                     })
                 }
             });
-            context('on success', function() {
+            context('on success', function () {
                 it('should return a valid playlist if it exists', function (done) {
                     let that = this.test;
-                    return services.getPlaylist(this.test.pId, function(err, result) {
+                    return services.getPlaylist(this.test.pId, function (err, result) {
                         expect(result).to.include({name: that.name, description: that.desc});
 
                         expect(result).to.have.property('id', that.pId);
@@ -316,12 +371,12 @@ describe('YamaService', function() {
             });
         });
 
-        context('putPlaylistMusic(pId, mId, body)', function() {
-            beforeEach (function(done) {
+        context('putPlaylistMusic(pId, mId, body)', function () {
+            beforeEach(function (done) {
                 let that = this.currentTest;
                 that.name = 'testPutPlaylistMusic';
                 that.desc = 'best test!';
-                services.postPlaylist({name: that.name, description: that.desc}, function(err, result) {
+                services.postPlaylist({name: that.name, description: that.desc}, function (err, result) {
                     if (err) done(err);
                     else {
                         that.pId = result.id;
@@ -329,18 +384,21 @@ describe('YamaService', function() {
                     }
                 })
             });
-            afterEach (function(done) {
+            afterEach(function (done) {
                 if (this.currentTest.pId) {
-                    services.deletePlaylist(this.currentTest.pId, function(err) {
+                    services.deletePlaylist(this.currentTest.pId, function (err) {
                         if (err) done(err);
                         else done();
                     })
                 }
             });
-            context('on success', function() {
+            context('on success', function () {
                 it('should return the edited playlist if it exists', function (done) {
                     let that = this.test;
-                    return services.putPlaylistMusic(this.test.pId,{artist: 'Cher', name: 'Believe'}, function (err, result) {
+                    return services.putPlaylistMusic(this.test.pId, {
+                        artist: 'Cher',
+                        name: 'Believe'
+                    }, function (err, result) {
                         expect(result).to.include({name: that.name, description: that.desc});
 
                         expect(result).to.have.property('id', that.pId);
@@ -360,16 +418,19 @@ describe('YamaService', function() {
             });
         });
 
-        context('deletePlaylistMusic(pId, mId, cb)', function() {
-            beforeEach (function(done) {
+        context('deletePlaylistMusic(pId, mId, cb)', function () {
+            beforeEach(function (done) {
                 let that = this.currentTest;
                 that.name = 'testDeletePlaylistMusic';
                 that.desc = 'best test!';
-                services.postPlaylist({name: that.name, description: that.desc}, function(err, result) {
+                services.postPlaylist({name: that.name, description: that.desc}, function (err, result) {
                     if (err) done(err);
                     else {
                         that.pId = result.id;
-                        services.putPlaylistMusic(that.pId,{artist: 'Cher', name: 'Believe'}, function(err, result) {
+                        services.putPlaylistMusic(that.pId, {
+                            artist: 'Cher',
+                            name: 'Believe'
+                        }, function (err, result) {
                             if (err) done(err);
                             else {
                                 done();
@@ -378,18 +439,18 @@ describe('YamaService', function() {
                     }
                 });
             });
-            afterEach (function(done) {
+            afterEach(function (done) {
                 if (this.currentTest.pId) {
-                    services.deletePlaylist(this.currentTest.pId, function(err) {
+                    services.deletePlaylist(this.currentTest.pId, function (err) {
                         if (err) done(err);
                         else done();
                     })
                 }
             });
-            context('on success', function() {
+            context('on success', function () {
                 it('should return the edited playlist if it exists', function (done) {
                     let that = this.test;
-                    return services.deletePlaylistMusic(this.test.pId,'32ca187e-ee25-4f18-b7d0-3b6713f24635', function (err, result) {
+                    return services.deletePlaylistMusic(this.test.pId, '32ca187e-ee25-4f18-b7d0-3b6713f24635', function (err, result) {
                         expect(result).to.include({name: that.name, description: that.desc});
 
                         expect(result).to.have.property('id', that.pId);
@@ -404,5 +465,4 @@ describe('YamaService', function() {
             });
         });
     });
-
 });
