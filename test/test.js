@@ -6,7 +6,7 @@ chai.use(chaiAsPromised);*/
 
 const expect = chai.expect;
 
-let services = new (require('./../lib/yama-services.js'))(new (require('./../lib/yama-db.js')), require('./../lib/lastfm.js'));
+let services = new (require('./../lib/yama-services.js'))(new (require('./../lib/yama-db.js')), require('./../lib/lastfm-mock.js'));
 
 describe('YamaService', function() {
     describe('Last.fm', function() {
