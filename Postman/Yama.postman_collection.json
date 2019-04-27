@@ -1,0 +1,931 @@
+{
+	"info": {
+		"_postman_id": "adc2b800-1c70-4671-a5e7-c7b8d20d177a",
+		"name": "Yama",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "DeleteYama",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:9200/yama",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9200",
+					"path": [
+						"yama"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "CreateYama",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:9200/yama",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9200",
+					"path": [
+						"yama"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PostPlaylist",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "56f41576-fdd0-4ad9-a83d-2b2f1d50ffbb",
+						"exec": [
+							"pm.test(\"Test if  name and discrition are present\", function(){",
+							"    var jsonData=pm.response.json();",
+							"    pm.environment.set(\"playlistID\", jsonData.id);",
+							"    pm.expect(jsonData.name).to.eql(\"BestPlaylist\");",
+							"    pm.expect(jsonData.description).to.eql(\"This really is the best playlist!\");",
+							"    ",
+							"});",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.sendRequest({",
+							"    url:\"http://localhost:3000/playlists\",",
+							"    method:\"Post\",",
+							"    header:{",
+							"        \"Content-Type\":\"application/json\"",
+							"    },",
+							"    body:{}}",
+							", function (err, response) {",
+							"     pm.test(\"Status code is 400\", function () {",
+							"        pm.expect(response.code).to.equal(400);",
+							"    });",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"{{playlistName}}\",\n    \"description\": \"{{playlistDescription}}\"\n}"
+				},
+				"url": {
+					"raw": "http://{{IP}}:{{PORT}}/playlists",
+					"protocol": "http",
+					"host": [
+						"{{IP}}"
+					],
+					"port": "{{PORT}}",
+					"path": [
+						"playlists"
+					]
+				},
+				"description": "Create a playlist with a name and description"
+			},
+			"response": [
+				{
+					"name": "PostPlaylist",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"{{playlistName}}\",\n    \"description\": \"{{playlistDescription}}\"\n}"
+						},
+						"url": {
+							"raw": "http://{{IP}}:{{PORT}}/playlists",
+							"protocol": "http",
+							"host": [
+								"{{IP}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"playlists"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Date",
+							"value": "Thu, 11 Apr 2019 15:37:11 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Content-Length",
+							"value": "113"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"id\": \"PzMLDWoBsJDXQSkBsOIV\",\n    \"name\": \"BestPlaylist\",\n    \"description\": \"This really is the best playlist!\",\n    \"tracks\": []\n}"
+				}
+			]
+		},
+		{
+			"name": "GetArtists",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "c2db3860-56fa-4ded-9ad2-2036f2fcb5da",
+						"exec": [
+							"",
+							"pm.test(\"Test if specific mbid is present\", function(){",
+							"    var jsonData=pm.response.json();",
+							"    pm.expect(jsonData.artists[0].mbid).to.eql(\"bfcc6d75-a6a5-4bc6-8282-47aec8531818\");",
+							"    ",
+							"});",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.sendRequest(\"http://localhost:3000/artist?artist=\", function (err, response) {",
+							"    pm.test(\"Body matches string\", function () {",
+							"        pm.expect(response.text()).to.include(\"No artist name specified.\");",
+							"    });",
+							"    pm.test(\"Status code is 400\", function () {",
+							"        pm.expect(response.code).to.equal(400);",
+							"    });",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://{{IP}}:{{PORT}}/artist?artist={{artistName}}",
+					"protocol": "http",
+					"host": [
+						"{{IP}}"
+					],
+					"port": "{{PORT}}",
+					"path": [
+						"artist"
+					],
+					"query": [
+						{
+							"key": "artist",
+							"value": "{{artistName}}"
+						}
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "GetArtists",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://{{IP}}:{{PORT}}/artist?artist={{ArtistName}}&page=&limit=",
+							"protocol": "http",
+							"host": [
+								"{{IP}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"artist"
+							],
+							"query": [
+								{
+									"key": "artist",
+									"value": "{{ArtistName}}"
+								},
+								{
+									"key": "page",
+									"value": ""
+								},
+								{
+									"key": "limit",
+									"value": ""
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 03 Apr 2019 18:20:34 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Content-Length",
+							"value": "2684"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"totalResults\": \"61065\",\n    \"artists\": [\n        {\n            \"name\": \"Cher\",\n            \"mbid\": \"bfcc6d75-a6a5-4bc6-8282-47aec8531818\",\n            \"listeners\": \"1108203\"\n        },\n        {\n            \"name\": \"Cheryl Cole\",\n            \"mbid\": \"2d499150-1c42-4ffb-a90c-1cc635519d33\",\n            \"listeners\": \"629101\"\n        },\n        {\n            \"name\": \"Cher Lloyd\",\n            \"mbid\": \"48fbfb0b-92ee-45eb-99c2-0bde4c05962e\",\n            \"listeners\": \"493141\"\n        },\n        {\n            \"name\": \"Black Stone Cherry\",\n            \"mbid\": \"1801bd47-46ae-49ff-bfcd-6e01b562d880\",\n            \"listeners\": \"319110\"\n        },\n        {\n            \"name\": \"Eagle-Eye Cherry\",\n            \"mbid\": \"4a5777b3-f55b-437c-8b23-d9ee7791c7fc\",\n            \"listeners\": \"857627\"\n        },\n        {\n            \"name\": \"Cheryl\",\n            \"mbid\": \"85df56ab-e125-4169-8ac8-e6666128d526\",\n            \"listeners\": \"128378\"\n        },\n        {\n            \"name\": \"Cherry Glazerr\",\n            \"mbid\": \"64a0c404-58af-4083-8fc6-a6725ef02ecb\",\n            \"listeners\": \"102146\"\n        },\n        {\n            \"name\": \"Neneh Cherry\",\n            \"mbid\": \"527c65d1-9fdb-4482-8796-dde2980bd63a\",\n            \"listeners\": \"269341\"\n        },\n        {\n            \"name\": \"Cherub\",\n            \"mbid\": \"abf42fca-8c2e-4d55-9fc8-6b1fc65a80f1\",\n            \"listeners\": \"152993\"\n        },\n        {\n            \"name\": \"Acid Black Cherry\",\n            \"mbid\": \"a3842d12-306c-498a-ae1d-03ee40e3f2ac\",\n            \"listeners\": \"29945\"\n        },\n        {\n            \"name\": \"Cherish\",\n            \"mbid\": \"e82500a8-70ce-46ad-a028-b0690420d560\",\n            \"listeners\": \"330632\"\n        },\n        {\n            \"name\": \"Cherry Poppin' Daddies\",\n            \"mbid\": \"e23612fb-6dd6-4d5c-b638-2611bfc8c48a\",\n            \"listeners\": \"138833\"\n        },\n        {\n            \"name\": \"Cherry Ghost\",\n            \"mbid\": \"1e76c9f2-2f79-4521-a418-a3c22eda30fa\",\n            \"listeners\": \"126345\"\n        },\n        {\n            \"name\": \"Blue Cheer\",\n            \"mbid\": \"523b52d7-a819-4111-9085-69fc269c9638\",\n            \"listeners\": \"174722\"\n        },\n        {\n            \"name\": \"Wild Cherry\",\n            \"mbid\": \"da5ff827-174b-48d1-9a39-9fa290bb2925\",\n            \"listeners\": \"340112\"\n        },\n        {\n            \"name\": \"Cheryl Lynn\",\n            \"mbid\": \"c2b8f775-455c-44c3-97ca-f377938da19e\",\n            \"listeners\": \"205997\"\n        },\n        {\n            \"name\": \"Sonny & Cher\",\n            \"mbid\": \"c43d2302-02db-487b-b62d-8cb3c57f94c6\",\n            \"listeners\": \"286312\"\n        },\n        {\n            \"name\": \"Cherri Bomb\",\n            \"mbid\": \"41db537e-1150-43b2-9a94-a7b8a08cd23d\",\n            \"listeners\": \"27169\"\n        },\n        {\n            \"name\": \"Don Cherry\",\n            \"mbid\": \"d45e4d9d-45c1-45cb-941a-8a5025874e06\",\n            \"listeners\": \"86173\"\n        },\n        {\n            \"name\": \"Cherish The Ladies\",\n            \"mbid\": \"c6c538ec-a3ca-43f0-8d73-6e88582de31f\",\n            \"listeners\": \"71641\"\n        },\n        {\n            \"name\": \"Jeanne Cherhal\",\n            \"mbid\": \"1c964d5b-ddf8-443f-a722-4e3d57b55d3c\",\n            \"listeners\": \"68140\"\n        },\n        {\n            \"name\": \"Cheers Elephant\",\n            \"mbid\": \"89724b2e-c0ba-43ae-9fcb-75011deb059f\",\n            \"listeners\": \"52208\"\n        },\n        {\n            \"name\": \"Cherokee\",\n            \"mbid\": \"ea71fddc-7e41-470f-8e13-6cd50ae981da\",\n            \"listeners\": \"47817\"\n        },\n        {\n            \"name\": \"CHERNIKOVSKAYA HATA\",\n            \"mbid\": \"\",\n            \"listeners\": \"10075\"\n        },\n        {\n            \"name\": \"CHERRY BULLET\",\n            \"mbid\": \"\",\n            \"listeners\": \"8282\"\n        },\n        {\n            \"name\": \"Cherrelle\",\n            \"mbid\": \"2a0b3bf9-0d04-4e49-91f5-9530cbebab55\",\n            \"listeners\": \"61040\"\n        },\n        {\n            \"name\": \"CHERRYBLOSSOM\",\n            \"mbid\": \"38f8a3fa-7379-49d6-88c2-2c16db1ac0db\",\n            \"listeners\": \"10365\"\n        },\n        {\n            \"name\": \"Cherry Filter\",\n            \"mbid\": \"49b85217-16c5-41bb-9e40-bd83f80eb1e6\",\n            \"listeners\": \"6151\"\n        },\n        {\n            \"name\": \"Cheiro de Amor\",\n            \"mbid\": \"24604d92-b584-4546-8203-98d13cd8e5a1\",\n            \"listeners\": \"24990\"\n        },\n        {\n            \"name\": \"Cherbourg\",\n            \"mbid\": \"9950f8fc-41ab-4d4b-9289-e1b1ce482baf\",\n            \"listeners\": \"42137\"\n        }\n    ]\n}"
+				}
+			]
+		},
+		{
+			"name": "GetArtistTopAlbums",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "4d2780f0-62dc-4d0e-8322-400379558bf2",
+						"exec": [
+							"",
+							"pm.test(\"Test if specific mbid is present\", function(){",
+							"    var jsonData=pm.response.json();",
+							"    pm.expect(jsonData.albums[0].mbid).to.eql(\"63b3a8ca-26f2-4e2b-b867-647a6ec2bebd\");",
+							"    ",
+							"});",
+							"",
+							"pm.test(\"Test if specific name is present\", function(){",
+							"    var jsonData=pm.response.json();",
+							"    pm.expect(jsonData.albums[0].name).to.eql(\"Believe\");",
+							"    ",
+							"});",
+							"",
+							"",
+							"pm.sendRequest(\"http://localhost:3000/artist/\", function (err, response) {",
+							"    pm.test(\"Body matches string\", function () {",
+							"        pm.expect(response.text()).to.include(\"Please specify an artist name or an mbid of an artist.\");",
+							"    });",
+							"    pm.test(\"Status code is 400\", function () {",
+							"        pm.expect(response.code).to.equal(400);",
+							"    });",
+							"",
+							"});",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://{{IP}}:{{PORT}}/artist/{{artistmbid}}?artist={{artistName}}",
+					"protocol": "http",
+					"host": [
+						"{{IP}}"
+					],
+					"port": "{{PORT}}",
+					"path": [
+						"artist",
+						"{{artistmbid}}"
+					],
+					"query": [
+						{
+							"key": "artist",
+							"value": "{{artistName}}"
+						}
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "GetArtistTopAlbums",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://{{IP}}:{{PORT}}/artist/{{artistmbid}}?artist={{ArtistName}}&page=&limit=",
+							"protocol": "http",
+							"host": [
+								"{{IP}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"artist",
+								"{{artistmbid}}"
+							],
+							"query": [
+								{
+									"key": "artist",
+									"value": "{{ArtistName}}"
+								},
+								{
+									"key": "page",
+									"value": ""
+								},
+								{
+									"key": "limit",
+									"value": ""
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 03 Apr 2019 18:40:14 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Content-Length",
+							"value": "7550"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"totalalbums\": 50,\n    \"albums\": [\n        {\n            \"name\": \"Believe\",\n            \"mbid\": \"63b3a8ca-26f2-4e2b-b867-647a6ec2bebd\",\n            \"playcount\": 2362854,\n            \"artist\": {\n                \"name\": \"Cher\",\n                \"mbid\": \"bfcc6d75-a6a5-4bc6-8282-47aec8531818\"\n            }\n        },\n        {\n            \"name\": \"The Very Best of Cher\",\n            \"mbid\": \"a7e2dad7-e733-4bee-9db1-b31e3183eaf5\",\n            \"playcount\": 1681173,\n            \"artist\": {\n                \"name\": \"Cher\",\n                \"mbid\": \"bfcc6d75-a6a5-4bc6-8282-47aec8531818\"\n            }\n        },\n        {\n            \"name\": \"Heart of Stone\",\n            \"mbid\": \"7468fc70-9cba-4bad-a2a8-4201221f54fe\",\n            \"playcount\": 640939,\n            \"artist\": {\n                \"name\": \"Cher\",\n                \"mbid\": \"bfcc6d75-a6a5-4bc6-8282-47aec8531818\"\n            }\n        },\n        {\n            \"name\": \"Cher's Greatest Hits: 1965-1992\",\n            \"playcount\": 430689,\n            \"artist\": {\n                \"name\": \"Cher\",\n                \"mbid\": \"bfcc6d75-a6a5-4bc6-8282-47aec8531818\"\n            }\n        },\n        {\n            \"name\": \"The Greatest Hits\",\n            \"mbid\": \"023af53b-2a8f-467e-aadc-307b3372ecc2\",\n            \"playcount\": 513180,\n            \"artist\": {\n                \"name\": \"Cher\",\n                \"mbid\": \"bfcc6d75-a6a5-4bc6-8282-47aec8531818\"\n            }\n        },\n        {\n            \"name\": \"It's a Man's World\",\n            \"mbid\": \"e4e7db8a-2622-47d3-80a5-91534d523ac5\",\n            \"playcount\": 350053,\n            \"artist\": {\n                \"name\": \"Cher\",\n                \"mbid\": \"bfcc6d75-a6a5-4bc6-8282-47aec8531818\"\n            }\n        },\n        {\n            \"name\": \"Living Proof\",\n            \"mbid\": \"182a2ec8-f717-4e06-a88e-604db80ab4aa\",\n            \"playcount\": 640907,\n            \"artist\": {\n                \"name\": \"Cher\",\n                \"mbid\": \"bfcc6d75-a6a5-4bc6-8282-47aec8531818\"\n            }\n        },\n        {\n            \"name\": \"Half Breed\",\n            \"mbid\": \"95945817-ebd8-4d3e-bb5f-fcb22de001ca\",\n            \"playcount\": 121037,\n            \"artist\": {\n                \"name\": \"Cher\",\n                \"mbid\": \"bfcc6d75-a6a5-4bc6-8282-47aec8531818\"\n            }\n        },\n        {\n            \"name\": \"The Best of Cher\",\n            \"mbid\": \"0128541a-3b4e-4bb9-8b82-344ab851c6de\",\n            \"playcount\": 72374,\n            \"artist\": {\n                \"name\": \"Cher\",\n                \"mbid\": \"bfcc6d75-a6a5-4bc6-8282-47aec8531818\"\n            }\n        },\n        {\n            \"name\": \"Burlesque Original Motion Picture Soundtrack\",\n            \"playcount\": 191648,\n            \"artist\": {\n                \"name\": \"Cher\",\n                \"mbid\": \"bfcc6d75-a6a5-4bc6-8282-47aec8531818\"\n            }\n        },\n        {\n            \"name\": \"Take Me Home & Prisoner\",\n            \"playcount\": 51811,\n            \"artist\": {\n                \"name\": \"Cher\",\n                \"mbid\": \"bfcc6d75-a6a5-4bc6-8282-47aec8531818\"\n            }\n        },\n        {\n            \"name\": \"Greatest Hits\",\n            \"mbid\": \"ec3f4f8d-1852-4407-9969-7baba18e6e37\",\n            \"playcount\": 110920,\n            \"artist\": {\n                \"name\": \"Cher\",\n                \"mbid\": \"bfcc6d75-a6a5-4bc6-8282-47aec8531818\"\n            }\n        },\n        {\n            \"name\": \"Cher\",\n            \"mbid\": \"368fc15c-e01c-4ad8-8fb3-26c44c695c84\",\n            \"playcount\": 263078,\n            \"artist\": {\n                \"name\": \"Cher\",\n                \"mbid\": \"bfcc6d75-a6a5-4bc6-8282-47aec8531818\"\n            }\n        },\n        {\n            \"name\": \"Love Hurts\",\n            \"mbid\": \"d52885f4-5444-4361-a1f3-ac4d079b603d\",\n            \"playcount\": 247814,\n            \"artist\": {\n                \"name\": \"Cher\",\n                \"mbid\": \"bfcc6d75-a6a5-4bc6-8282-47aec8531818\"\n            }\n        },\n        {\n            \"name\": \"Gold\",\n            \"mbid\": \"9880981e-90ba-4767-9473-4d058bcd099f\",\n            \"playcount\": 167945,\n            \"artist\": {\n                \"name\": \"Cher\",\n                \"mbid\": \"bfcc6d75-a6a5-4bc6-8282-47aec8531818\"\n            }\n        },\n        {\n            \"name\": \"Strong Enough\",\n            \"mbid\": \"92aa86fd-f1c9-4b74-b2d7-711f9765e936\",\n            \"playcount\": 69307,\n            \"artist\": {\n                \"name\": \"Cher\",\n                \"mbid\": \"bfcc6d75-a6a5-4bc6-8282-47aec8531818\"\n            }\n        },\n        {\n            \"name\": \"Closer to the Truth\",\n            \"playcount\": 684051,\n            \"artist\": {\n                \"name\": \"Cher\",\n                \"mbid\": \"bfcc6d75-a6a5-4bc6-8282-47aec8531818\"\n            }\n        },\n        {\n            \"name\": \"Dancing Queen\",\n            \"playcount\": 406878,\n            \"artist\": {\n                \"name\": \"Cher\",\n                \"mbid\": \"bfcc6d75-a6a5-4bc6-8282-47aec8531818\"\n            }\n        },\n        {\n            \"name\": \"Closer To the Truth (Deluxe Version)\",\n            \"mbid\": \"4003e2bb-e868-431f-a086-f53d557606c9\",\n            \"playcount\": 459950,\n            \"artist\": {\n                \"name\": \"Cher\",\n                \"mbid\": \"bfcc6d75-a6a5-4bc6-8282-47aec8531818\"\n            }\n        },\n        {\n            \"name\": \"Gimme! Gimme! Gimme! (A Man After Midnight)\",\n            \"playcount\": 91940,\n            \"artist\": {\n                \"name\": \"Cher\",\n                \"mbid\": \"bfcc6d75-a6a5-4bc6-8282-47aec8531818\"\n            }\n        },\n        {\n            \"name\": \"(null)\",\n            \"playcount\": 109857,\n            \"artist\": {\n                \"name\": \"Cher\",\n                \"mbid\": \"bfcc6d75-a6a5-4bc6-8282-47aec8531818\"\n            }\n        },\n        {\n            \"name\": \"Gypsys, Tramps & Thieves\",\n            \"mbid\": \"ac1d49a5-611e-4895-921d-83cbec6d1df6\",\n            \"playcount\": 118807,\n            \"artist\": {\n                \"name\": \"Cher\",\n                \"mbid\": \"bfcc6d75-a6a5-4bc6-8282-47aec8531818\"\n            }\n        },\n        {\n            \"name\": \"Greatest Hits: If I Could Turn Back Time\",\n            \"mbid\": \"2fba163f-011f-4c8e-a133-78b397443e78\",\n            \"playcount\": 19172,\n            \"artist\": {\n                \"name\": \"Cher\",\n                \"mbid\": \"bfcc6d75-a6a5-4bc6-8282-47aec8531818\"\n            }\n        },\n        {\n            \"name\": \"Burlesque\",\n            \"playcount\": 162865,\n            \"artist\": {\n                \"name\": \"Cher\",\n                \"mbid\": \"bfcc6d75-a6a5-4bc6-8282-47aec8531818\"\n            }\n        },\n        {\n            \"name\": \"The Very Best of Cher [Warner Bros #1]\",\n            \"playcount\": 78940,\n            \"artist\": {\n                \"name\": \"Cher\",\n                \"mbid\": \"bfcc6d75-a6a5-4bc6-8282-47aec8531818\"\n            }\n        },\n        {\n            \"name\": \"The Best of Cher (The Imperial Recordings: 1965-1968)\",\n            \"playcount\": 60504,\n            \"artist\": {\n                \"name\": \"Cher\",\n                \"mbid\": \"bfcc6d75-a6a5-4bc6-8282-47aec8531818\"\n            }\n        },\n        {\n            \"name\": \"If I Could Turn Back Time - Cher's Greatest Hits\",\n            \"playcount\": 51111,\n            \"artist\": {\n                \"name\": \"Cher\",\n                \"mbid\": \"bfcc6d75-a6a5-4bc6-8282-47aec8531818\"\n            }\n        },\n        {\n            \"name\": \"A Different Kind of Love Song\",\n            \"mbid\": \"f8912620-c18c-446b-9183-c558935b7689\",\n            \"playcount\": 15349,\n            \"artist\": {\n                \"name\": \"Cher\",\n                \"mbid\": \"bfcc6d75-a6a5-4bc6-8282-47aec8531818\"\n            }\n        },\n        {\n            \"name\": \"All Or Nothing\",\n            \"mbid\": \"28e23680-1c42-4d87-83ae-d74752538d3c\",\n            \"playcount\": 17732,\n            \"artist\": {\n                \"name\": \"Cher\",\n                \"mbid\": \"bfcc6d75-a6a5-4bc6-8282-47aec8531818\"\n            }\n        },\n        {\n            \"name\": \"Song for the Lonely\",\n            \"mbid\": \"cd4de50c-905a-4045-89a3-6576cc2f4f5b\",\n            \"playcount\": 15006,\n            \"artist\": {\n                \"name\": \"Cher\",\n                \"mbid\": \"bfcc6d75-a6a5-4bc6-8282-47aec8531818\"\n            }\n        },\n        {\n            \"name\": \"All I Really Want to Do\",\n            \"mbid\": \"5e37a247-b02f-4c29-8349-0655091051ac\",\n            \"playcount\": 80419,\n            \"artist\": {\n                \"name\": \"Cher\",\n                \"mbid\": \"bfcc6d75-a6a5-4bc6-8282-47aec8531818\"\n            }\n        },\n        {\n            \"name\": \"Bang Bang: The Early Years\",\n            \"playcount\": 30901,\n            \"artist\": {\n                \"name\": \"Cher\",\n                \"mbid\": \"bfcc6d75-a6a5-4bc6-8282-47aec8531818\"\n            }\n        },\n        {\n            \"name\": \"Burlesque (Original Motion Picture Soundtrack)\",\n            \"playcount\": 83023,\n            \"artist\": {\n                \"name\": \"Cher\",\n                \"mbid\": \"bfcc6d75-a6a5-4bc6-8282-47aec8531818\"\n            }\n        },\n        {\n            \"name\": \"3614 Jackson Highway\",\n            \"mbid\": \"a67bf28f-d1f5-4fcc-b408-4ef625402dc2\",\n            \"playcount\": 66945,\n            \"artist\": {\n                \"name\": \"Cher\",\n                \"mbid\": \"bfcc6d75-a6a5-4bc6-8282-47aec8531818\"\n            }\n        },\n        {\n            \"name\": \"SOS\",\n            \"playcount\": 28979,\n            \"artist\": {\n                \"name\": \"Cher\",\n                \"mbid\": \"bfcc6d75-a6a5-4bc6-8282-47aec8531818\"\n            }\n        },\n        {\n            \"name\": \"The Music's No Good Without You\",\n            \"mbid\": \"efbb6230-96ce-4820-b8ca-ac5fc73300c2\",\n            \"playcount\": 12243,\n            \"artist\": {\n                \"name\": \"Cher\",\n                \"mbid\": \"bfcc6d75-a6a5-4bc6-8282-47aec8531818\"\n            }\n        },\n        {\n            \"name\": \"Fernando (From \\\"Mamma Mia! Here We Go Again\\\")\",\n            \"playcount\": 21229,\n            \"artist\": {\n                \"name\": \"Cher\",\n                \"mbid\": \"bfcc6d75-a6a5-4bc6-8282-47aec8531818\"\n            }\n        },\n        {\n            \"name\": \"Woman's World\",\n            \"mbid\": \"5c3a4ee5-3add-4b87-abb3-d4ab7fa50f69\",\n            \"playcount\": 57396,\n            \"artist\": {\n                \"name\": \"Cher\",\n                \"mbid\": \"bfcc6d75-a6a5-4bc6-8282-47aec8531818\"\n            }\n        },\n        {\n            \"name\": \"20th Century Masters: The Millennium Collection: Best Of Cher\",\n            \"playcount\": 20816,\n            \"artist\": {\n                \"name\": \"Cher\",\n                \"mbid\": \"bfcc6d75-a6a5-4bc6-8282-47aec8531818\"\n            }\n        },\n        {\n            \"name\": \"The Best Of Cher Volume 2 20th Century Masters The Millennium Collection\",\n            \"playcount\": 24886,\n            \"artist\": {\n                \"name\": \"Cher\",\n                \"mbid\": \"bfcc6d75-a6a5-4bc6-8282-47aec8531818\"\n            }\n        },\n        {\n            \"name\": \"Mamma Mia! Here We Go Again (Original Motion Picture Soundtrack)\",\n            \"playcount\": 24529,\n            \"artist\": {\n                \"name\": \"Cher\",\n                \"mbid\": \"bfcc6d75-a6a5-4bc6-8282-47aec8531818\"\n            }\n        },\n        {\n            \"name\": \"Chronicles\",\n            \"playcount\": 22482,\n            \"artist\": {\n                \"name\": \"Cher\",\n                \"mbid\": \"bfcc6d75-a6a5-4bc6-8282-47aec8531818\"\n            }\n        },\n        {\n            \"name\": \"Not.com.mercial\",\n            \"mbid\": \"eef5d1f8-93b3-42e2-aafa-1158d66ea983\",\n            \"playcount\": 76796,\n            \"artist\": {\n                \"name\": \"Cher\",\n                \"mbid\": \"bfcc6d75-a6a5-4bc6-8282-47aec8531818\"\n            }\n        },\n        {\n            \"name\": \"The Very Best Of Cher (2003)\",\n            \"playcount\": 46470,\n            \"artist\": {\n                \"name\": \"Cher\",\n                \"mbid\": \"bfcc6d75-a6a5-4bc6-8282-47aec8531818\"\n            }\n        },\n        {\n            \"name\": \"The Very Best Of 1965-2003\",\n            \"playcount\": 134626,\n            \"artist\": {\n                \"name\": \"Cher\",\n                \"mbid\": \"bfcc6d75-a6a5-4bc6-8282-47aec8531818\"\n            }\n        },\n        {\n            \"name\": \"Take Me Home\",\n            \"mbid\": \"9cd2ad21-ad13-4490-bc58-22943cd89380\",\n            \"playcount\": 48192,\n            \"artist\": {\n                \"name\": \"Cher\",\n                \"mbid\": \"bfcc6d75-a6a5-4bc6-8282-47aec8531818\"\n            }\n        },\n        {\n            \"name\": \"100 Essential Love Songs\",\n            \"playcount\": 8311,\n            \"artist\": {\n                \"name\": \"Cher\",\n                \"mbid\": \"bfcc6d75-a6a5-4bc6-8282-47aec8531818\"\n            }\n        },\n        {\n            \"name\": \"Belive\",\n            \"playcount\": 20534,\n            \"artist\": {\n                \"name\": \"Cher\",\n                \"mbid\": \"bfcc6d75-a6a5-4bc6-8282-47aec8531818\"\n            }\n        },\n        {\n            \"name\": \"Live: The Farewell Tour\",\n            \"mbid\": \"aba9daaa-1e9c-427c-9595-e9013dee3c9d\",\n            \"playcount\": 104180,\n            \"artist\": {\n                \"name\": \"Cher\",\n                \"mbid\": \"bfcc6d75-a6a5-4bc6-8282-47aec8531818\"\n            }\n        },\n        {\n            \"name\": \"Dark Lady\",\n            \"mbid\": \"aa119742-4d13-408a-a453-be54bc79ba61\",\n            \"playcount\": 63653,\n            \"artist\": {\n                \"name\": \"Cher\",\n                \"mbid\": \"bfcc6d75-a6a5-4bc6-8282-47aec8531818\"\n            }\n        }\n    ]\n}"
+				}
+			]
+		},
+		{
+			"name": "GetAlbum",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "648336b1-5872-4ec1-8755-70377a59fca1",
+						"exec": [
+							"pm.test(\"Test if specific mbid is present\", function(){",
+							"    var jsonData=pm.response.json();",
+							"    pm.expect(jsonData.mbid).to.eql(\"63b3a8ca-26f2-4e2b-b867-647a6ec2bebd\");",
+							"    ",
+							"});",
+							"pm.test(\"Test if specific name is present\", function(){",
+							"    var jsonData=pm.response.json();",
+							"    pm.expect(jsonData.tracks[0].name).to.eql(\"Believe\");",
+							"    ",
+							"",
+							"});",
+							"pm.sendRequest(\"http://localhost:3000/album/\", function (err, response) {",
+							"    pm.test(\"Body matches string\", function () {",
+							"        pm.expect(response.text()).to.include(\"No artist mbid specified.\");",
+							"    });",
+							"    pm.test(\"Status code is 400\", function () {",
+							"        pm.expect(response.code).to.equal(400);",
+							"    });",
+							"",
+							"});",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://{{IP}}:{{PORT}}/album/{{albummbid}}?artist={{ArtistName}}",
+					"protocol": "http",
+					"host": [
+						"{{IP}}"
+					],
+					"port": "{{PORT}}",
+					"path": [
+						"album",
+						"{{albummbid}}"
+					],
+					"query": [
+						{
+							"key": "artist",
+							"value": "{{ArtistName}}"
+						}
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "GetAlbum",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://{{IP}}:{{PORT}}/album/{{albummbid}}?artist={{ArtistName}}&page=&limit=",
+							"protocol": "http",
+							"host": [
+								"{{IP}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"album",
+								"{{albummbid}}"
+							],
+							"query": [
+								{
+									"key": "artist",
+									"value": "{{ArtistName}}"
+								},
+								{
+									"key": "page",
+									"value": ""
+								},
+								{
+									"key": "limit",
+									"value": ""
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 03 Apr 2019 18:43:02 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Content-Length",
+							"value": "552"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"Name\": \"Believe\",\n    \"Artist\": \"Cher\",\n    \"mbid\": \"63b3a8ca-26f2-4e2b-b867-647a6ec2bebd\",\n    \"listeners\": \"373273\",\n    \"playcount\": \"2362854\",\n    \"tracks\": [\n        {\n            \"name\": \"Believe\",\n            \"duration\": \"240\"\n        },\n        {\n            \"name\": \"The Power\",\n            \"duration\": \"236\"\n        },\n        {\n            \"name\": \"Runaway\",\n            \"duration\": \"286\"\n        },\n        {\n            \"name\": \"All or Nothing\",\n            \"duration\": \"238\"\n        },\n        {\n            \"name\": \"Strong Enough\",\n            \"duration\": \"224\"\n        },\n        {\n            \"name\": \"Dov'e L'amore\",\n            \"duration\": \"258\"\n        },\n        {\n            \"name\": \"Takin' Back My Heart\",\n            \"duration\": \"272\"\n        },\n        {\n            \"name\": \"Taxi Taxi\",\n            \"duration\": \"304\"\n        },\n        {\n            \"name\": \"Love Is the Groove\",\n            \"duration\": \"271\"\n        },\n        {\n            \"name\": \"We All Sleep Alone\",\n            \"duration\": \"233\"\n        }\n    ]\n}"
+				}
+			]
+		},
+		{
+			"name": "GetPlaylists",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "b3da8ae4-50e3-486e-b7a2-6eedaf3252eb",
+						"exec": [
+							"pm.test(\"Test if specific playlistID id present\", function(){",
+							"    var jsonData=pm.response.json();",
+							"    let result = false;",
+							"    for(let i = 0; i < jsonData.playlists.length; i++){",
+							"        if(jsonData.playlists[i].id === pm.environment.get(\"playlistID\")){",
+							"            result = true;",
+							"            break;",
+							"        }",
+							"    }",
+							"    pm.expect(result).to.eql(true);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://{{IP}}:{{PORT}}/playlists",
+					"protocol": "http",
+					"host": [
+						"{{IP}}"
+					],
+					"port": "{{PORT}}",
+					"path": [
+						"playlists"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "GetPlaylists",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://{{IP}}:{{PORT}}/playlists",
+							"protocol": "http",
+							"host": [
+								"{{IP}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"playlists"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Date",
+							"value": "Thu, 11 Apr 2019 15:36:27 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Content-Length",
+							"value": "194"
+						}
+					],
+					"cookie": [],
+					"body": "[\n    {\n        \"id\": \"PTP6DGoBsJDXQSkBS-JF\",\n        \"name\": \"BestPlaylist\",\n        \"description\": \"This really is the best playlist!\",\n        \"tracks\": []\n    },\n    {\n        \"id\": \"PjMDDWoBsJDXQSkB2uIV\",\n        \"name\": \"myname\",\n        \"description\": \"blah\",\n        \"tracks\": []\n    }\n]"
+				}
+			]
+		},
+		{
+			"name": "PutPlaylist",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "d0b996f0-8fc5-4dac-9446-dc356d90909b",
+						"exec": [
+							"",
+							"pm.test(\"Test if  name and discrition are present\", function(){",
+							"    var jsonData=pm.response.json();",
+							"    pm.expect(jsonData.id).to.eql( pm.environment.get(\"playlistID\"));",
+							"    pm.expect(jsonData.name).to.eql(pm.environment.get(\"newPlaylistName\"));",
+							"    pm.expect(jsonData.description).to.eql(pm.environment.get(\"newPlaylistDescription\"));",
+							"    ",
+							"});",
+							"",
+							"",
+							"",
+							"",
+							"pm.sendRequest({",
+							"    url:\"http://localhost:3000/playlists/1224\",",
+							"    method:\"Put\",",
+							"    header:{",
+							"        \"Content-Type\":\"application/json\"",
+							"    },",
+							"    body:{",
+							"          \"name\": \"{{newPlaylistName}}\",",
+							"    \"description\": \"{{newPlaylistDescription}}\"",
+							"        ",
+							"    }}",
+							", function (err, response) {",
+							"     pm.test(\"Status code is 404\", function () {",
+							"        pm.expect(response.code).to.equal(404);",
+							"    });",
+							"});",
+							"",
+							"",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"{{newPlaylistName}}\",\n    \"description\": \"{{newPlaylistDescription}}\"\n}"
+				},
+				"url": {
+					"raw": "http://{{IP}}:{{PORT}}/playlists/{{playlistID}}",
+					"protocol": "http",
+					"host": [
+						"{{IP}}"
+					],
+					"port": "{{PORT}}",
+					"path": [
+						"playlists",
+						"{{playlistID}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetPlaylist",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "97ad08eb-87f8-4fc5-b09b-589ba72d876a",
+						"exec": [
+							"",
+							"pm.test(\"Test if  name and discrition are present\", function(){",
+							"    var jsonData=pm.response.json();",
+							"    pm.expect(jsonData.id).to.eql( pm.environment.get(\"playlistID\"));",
+							"    ",
+							"});",
+							"",
+							"",
+							"pm.test(\"Body matches string\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"name\");",
+							"     pm.expect(pm.response.text()).to.include(\"description\");",
+							"});",
+							"",
+							"",
+							"",
+							"pm.sendRequest({",
+							"    url:\"http://localhost:3000/playlists/\",",
+							"    method:\"Get\"",
+							"}",
+							", function (err, response) {",
+							"     pm.test(\"Status code is 404\", function () {",
+							"        pm.expect(response.code).to.equal(404);",
+							"    });",
+							"});",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://{{IP}}:{{PORT}}/playlists/{{playlistID}}",
+					"protocol": "http",
+					"host": [
+						"{{IP}}"
+					],
+					"port": "{{PORT}}",
+					"path": [
+						"playlists",
+						"{{playlistID}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PutPlaylistMusic",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "fcced308-8e40-4c6e-8520-9300141cf54d",
+						"exec": [
+							"pm.test(\"Test if specific trackname is present\", function(){",
+							"    var jsonData=pm.response.json();",
+							"    let result = false;",
+							"    for(let i = 0; i < jsonData.tracks.length; i++){",
+							"        if(jsonData.tracks[i].name === pm.environment.get(\"trackName\")){",
+							"            result = true;",
+							"            break;",
+							"        }",
+							"    }",
+							"    pm.expect(result).to.eql(true);",
+							"});",
+							"",
+							"",
+							"pm.sendRequest({",
+							"    url:\"http://localhost:3000/playlists/1224/music\",",
+							"    method:\"Put\",",
+							"    header:{",
+							"        \"Content-Type\":\"application/json\"",
+							"    },",
+							"    body:{",
+							"        \t\"artist\": \"{{artistName}}\",",
+							"            \"name\": \"{{trackName}}\"",
+							"        ",
+							"    }}",
+							", function (err, response) {",
+							"     pm.test(\"Status code is 400\", function () {",
+							"        pm.expect(response.code).to.equal(400);",
+							"    });",
+							"});",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"artist\": \"{{artistName}}\",\n    \"name\": \"{{trackName}}\"\n}"
+				},
+				"url": {
+					"raw": "http://{{IP}}:{{PORT}}/playlists/{{playlistID}}/music",
+					"protocol": "http",
+					"host": [
+						"{{IP}}"
+					],
+					"port": "{{PORT}}",
+					"path": [
+						"playlists",
+						"{{playlistID}}",
+						"music"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DeletePlaylistMusic",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "a82cf536-d9e7-4294-9a0a-cd61ebbe3656",
+						"exec": [
+							"",
+							"pm.test(\"Test if specific playlistID id present\", function(){",
+							"    var jsonData=pm.response.json();",
+							"    let result = false;",
+							"    for(let i = 0; i < jsonData.tracks.length; i++){",
+							"        if(jsonData.tracks[i].id === pm.environment.get(\"musicID\")){",
+							"            result = true;",
+							"            break;",
+							"        }",
+							"    }",
+							"    pm.expect(result).to.eql(false);",
+							"});",
+							"",
+							"",
+							"pm.sendRequest({",
+							"    url: \"http://localhost:3000/playlists/1224/music/\"+ pm.environment.get(\"musicID\"),",
+							"    method:\"Put\",",
+							"    header:{",
+							"        \"Content-Type\":\"application/json\"",
+							"    },",
+							"    body:{",
+							"        \t\"artist\": \"{{artistName}}\",",
+							"            \"name\": \"{{trackName}}\"",
+							"        ",
+							"    }}",
+							", function (err, response) {",
+							"     pm.test(\"Status code is 404\", function () {",
+							"        pm.expect(response.code).to.equal(404);",
+							"    });",
+							"});",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://{{IP}}:{{PORT}}/playlists/{{playlistID}}/music/{{musicID}}",
+					"protocol": "http",
+					"host": [
+						"{{IP}}"
+					],
+					"port": "{{PORT}}",
+					"path": [
+						"playlists",
+						"{{playlistID}}",
+						"music",
+						"{{musicID}}"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
