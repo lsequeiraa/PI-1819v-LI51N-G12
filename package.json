@@ -23,7 +23,8 @@
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
     "debug": "^4.1.1",
-    "mocha": "^6.0.2",
+    "express": "^4.16.4",
+    "mocha": "^6.1.4",
     "request": "^2.88.0"
   }
 }
