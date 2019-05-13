@@ -7,14 +7,14 @@ chai.use(chaiAsPromised);*/
 const expect = chai.expect;
 const should = chai.should();
 
-let services = new (require('./../lib/yama-services.js'))(new (require('./../lib/yama-db.js')), require('./../lib/lastfm.js'));
+let services = new (require('./../lib/yama-services-mock.js'))(new (require('./../lib/yama-db.js')), require('./../lib/lastfm-mock.js'));
 
 describe('YamaService', function() {
     describe('Last.fm', function() {
         describe('getArtists(query)', function() {
             context('on success', function() {
                 it('should return a valid list of artists if it exists', function(done) {
-                    return services.getArtists({artist: 'Cher'})
+                    services.getArtists({artist: 'Cher'})
                         .then((result) => {
                             expect(result).to.have.property('totalResults');
                             expect(result).to.have.property('artists').that.is.an('array');
@@ -25,28 +25,16 @@ describe('YamaService', function() {
                             expect(result).to.have.property('totalResults');
                             expect(art1).to.include({name: 'Cher', mbid: 'bfcc6d75-a6a5-4bc6-8282-47aec8531818'});
                             expect(art2).to.include({name: 'Cheryl Cole', mbid: '2d499150-1c42-4ffb-a90c-1cc635519d33'});
-
-                            done();
                         })
-                        /*.then((result) => {
-                            let art1 = result.artists[0];
-                            let art2 = result.artists[1];
-
-                            expect(result).to.have.property('totalResults');
-                            expect(art1).to.include({name: 'Cher', mbid: 'bfcc6d75-a6a5-4bc6-8282-47aec8531818'});
-                            expect(art2).to.include({name: 'Cheryl Cole', mbid: '2d499150-1c42-4ffb-a90c-1cc635519d33'});
-
-                        })*/
+                        .finally(done);
                 });
             });
 
             context('on failure', function() {
                 it('should send an error if no artist name is given', function(done) {
-                    return services.getArtists(undefined, function (err) {
-                        expect(err).to.be.an('object');
-
-                        done();
-                    })
+                    services.getArtists(undefined)
+                        .catch( (err) => expect(err).to.be.an('object'))
+                        .finally(done);
                 })
                 /*it('should reject promise if no artist name is given', () => {
                     return expect(services.getArtists(undefined)).to.eventually.be.rejected;
@@ -57,43 +45,34 @@ describe('YamaService', function() {
         describe('getArtistTopAlbums(arId, query)', function() {
             context('on success', function() {
                 it('should return a valid list of albums from a specific artist if it exists', function(done) {
-                    return services.getArtistTopAlbums('bfcc6d75-a6a5-4bc6-8282-47aec8531818', null)
-                        .then(() => {
-                        expect(result).to.have.property('totalResults');
-                        expect(result).to.have.property('albums').that.is.an('array');
+                    services.getArtistTopAlbums('bfcc6d75-a6a5-4bc6-8282-47aec8531818', null)
+                        .then((result) => {
+                            expect(result).to.have.property('totalResults');
+                            expect(result).to.have.property('albums').that.is.an('array');
 
-                        let alb1 = result.albums[0];
-                        let alb2 = result.albums[1];
-
-                        expect(alb1).to.have.property('name');
-                        expect(alb1).to.have.property('mbid');
-                        expect(alb1).to.have.property('playcount');
-
-                        expect(alb1).to.include({name: 'Believe', mbid: '63b3a8ca-26f2-4e2b-b867-647a6ec2bebd'});
-                        expect(alb2).to.include({name: 'The Very Best of Cher', mbid: 'a7e2dad7-e733-4bee-9db1-b31e3183eaf5'});
-
-                        done();
-                    })
-                        /*.then((result) => {
                             let alb1 = result.albums[0];
                             let alb2 = result.albums[1];
 
+                            expect(alb1).to.have.property('name');
+                            expect(alb1).to.have.property('mbid');
+                            expect(alb1).to.have.property('playcount');
+
                             expect(alb1).to.include({name: 'Believe', mbid: '63b3a8ca-26f2-4e2b-b867-647a6ec2bebd'});
                             expect(alb2).to.include({name: 'The Very Best of Cher', mbid: 'a7e2dad7-e733-4bee-9db1-b31e3183eaf5'});
-
-                        })*/
+                        })
+                        .finally(done);
                 });
             });
 
             context('on failure', function() {
                 it('should send an error if no artist name is given', function(done) {
-                    return services.getArtistTopAlbums(undefined, null, function (err) {
-                        expect(err).to.be.an('object');
-                        expect(err).to.include({code: 400});
-
-                        done();
-                    })
-                })
+                    services.getArtistTopAlbums(undefined, null)
+                        .catch((err) => {
+                            expect(err).to.be.an('object');
+                            expect(err).to.include({code: 400});
+                        })
+                        .finally(done)
+                });
                 /*it('should reject promise if no mbid is given', () => {
                     return expect(services.getArtistTopAlbums(undefined)).to.eventually.be.rejected;
                 });*/
@@ -103,35 +82,26 @@ describe('YamaService', function() {
         describe('getAlbum(alId)', function() {
             context('on success', function() {
                 it('should return a valid album if it exists', function(done) {
-                    return services.getAlbum('63b3a8ca-26f2-4e2b-b867-647a6ec2bebd')
+                    services.getAlbum('63b3a8ca-26f2-4e2b-b867-647a6ec2bebd')
                         .then((result)=> {
-                        expect(result).to.have.property('listeners');
-
-                        let tracks = result.tracks;
-
-                        expect(result).to.include({name: 'Believe', artist: 'Cher', mbid: '63b3a8ca-26f2-4e2b-b867-647a6ec2bebd'});
-                        expect(tracks[0]).to.include({name: 'Believe', duration: '240'});
-
-                        done();
-                    })
-                        /*.then((result) => {
                             expect(result).to.have.property('listeners');
 
                             let tracks = result.tracks;
 
-                            expect(result).to.include({Name: 'Believe', Artist: 'Cher', mbid: '63b3a8ca-26f2-4e2b-b867-647a6ec2bebd'});
+                            expect(result).to.include({name: 'Believe', artist: 'Cher', mbid: '63b3a8ca-26f2-4e2b-b867-647a6ec2bebd'});
                             expect(tracks[0]).to.include({name: 'Believe', duration: '240'});
-                        })*/
+                        })
+                        .finally(done);
                 });
             });
 
             context('on failure', function() {
                 it('should send an error if no artist name is given', function(done) {
-                    return services.getAlbum(undefined, function (err) {
-                        expect(err).to.be.an('object');
-
-                        done();
-                    })
+                    services.getAlbum(undefined)
+                        .catch((err) => {
+                            expect(err).to.be.an('object');
+                        })
+                        .finally(done);
                 })
                 /*it('should reject promise if no mbid is given', () => {
                     return expect(services.getAlbum(undefined)).to.eventually.be.rejected;
@@ -145,9 +115,8 @@ describe('YamaService', function() {
             context('on success', function () {
                 afterEach(function (done) {
                     if (this.currentTest.pId) {
-                        return services.deletePlaylist(this.currentTest.pId)
-                            .then(()=> done())
-                            .cathc((err)=> done(err))
+                        services.deletePlaylist(this.currentTest.pId)
+                            .finally(done);
                     }
                 });
                 it('should return the created playlist', function (done) {
@@ -155,46 +124,45 @@ describe('YamaService', function() {
 
                     let name = 'testPostPlaying';
                     let desc = 'best test!';
-                    return services.postPlaylist({name: name, description: desc})
+                    services.postPlaylist({name: name, description: desc})
                         .then((result)=> {
-                        expect(result).to.include({name: name, description: desc});
+                            expect(result).to.include({name: name, description: desc});
 
-                        expect(result).to.have.property('id');
-                        expect(result).to.have.property('totalDuration');
-                        expect(result).to.have.property('tracks');
+                            expect(result).to.have.property('id');
+                            expect(result).to.have.property('totalDuration');
+                            expect(result).to.have.property('tracks');
 
-                        that.pId = result.id;
-
-                        done();
-                    })
+                            that.pId = result.id;
+                        })
+                        .finally(done);
                 });
             });
             context('on failure', function () {
                 it('should send an error if no name is provided', function (done) {
                     let desc = 'best test!';
-                    return services.postPlaylist({description: desc}, function (err, result) {
-                        should.exist(err);
-                        expect(err).to.have.property('code');
-
-                        done();
-                    });
+                    services.postPlaylist({description: desc})
+                        .catch(err => {
+                            should.exist(err);
+                            expect(err).to.have.property('code');
+                        })
+                        .finally(done);
                 });
                 it('should send an error if no description is provided', function (done) {
                     let name = 'testPostPlaying';
-                    return services.postPlaylist({name: name}, function (err, result) {
-                        should.exist(err);
-                        expect(err).to.have.property('code');
-
-                        done();
-                    });
+                    services.postPlaylist({name: name})
+                        .catch(err => {
+                            should.exist(err);
+                            expect(err).to.have.property('code');
+                        })
+                        .finally(done);
                 });
                 it('should send an error if no body is provided', function (done) {
-                    return services.postPlaylist(null, function (err, result) {
-                        should.exist(err);
-                        expect(err).to.have.property('code');
-
-                        done();
-                    });
+                    services.postPlaylist(null)
+                        .catch(err => {
+                            should.exist(err);
+                            expect(err).to.have.property('code');
+                        })
+                        .finally(done);
                 });
             });
         });
@@ -203,21 +171,19 @@ describe('YamaService', function() {
             beforeEach(function (done) {
                 let that = this.currentTest;
 
-                return services.postPlaylist({
+                services.postPlaylist({
                     name: 'testPutPlaylist',
                     description: 'best test!'
                 })
-                .then(()=> {
+                .then((result) => {
                     that.pId = result.id;
-                    done();
                 })
-                .catch(err => done(err))
+                    .finally(done);
             });
             afterEach(function (done) {
                 if (this.currentTest.pId) {
-                    return services.deletePlaylist(this.currentTest.pId)
-                    .then(()=> done())
-                    .catch(err=> done(err))
+                    services.deletePlaylist(this.currentTest.pId)
+                    .finally(done);
                 }
             });
             context('on success', function () {
@@ -226,7 +192,8 @@ describe('YamaService', function() {
 
                     let name = 'editedPutPlaylist';
                     let desc = 'better test!';
-                    return services.putPlaylist(this.test.pId, {
+
+                    services.putPlaylist(this.test.pId, {
                         name: name,
                         description: desc
                     })
@@ -238,9 +205,8 @@ describe('YamaService', function() {
                         //expect(result).to.have.property('tracks');
 
                         that.pId = result.id;
-
-                        done();
                     })
+                        .finally(done);
                 });
             });
             context('on failure', function () {
@@ -249,13 +215,13 @@ describe('YamaService', function() {
 
                     let name = 'editedPutPlaylist';
                     let desc = 'better test!';
-                    return services.putPlaylist('thisindexshouldntexist', {name: name, description: desc})
+
+                    services.putPlaylist('thisindexshouldntexist', {name: name, description: desc})
                     .catch(err=> {
                         should.exist(err);
                         expect(err).to.have.property('code');
-
-                        done();
                     })
+                        .finally(done);
                 });
             });
         });
@@ -265,59 +231,57 @@ describe('YamaService', function() {
                 let that = this.currentTest;
                 that.ids = [];
 
-                return services.postPlaylist({
+                services.postPlaylist({
                     name: 'testGetPlaylists1',
                     description: 'best test!'
                 })
-                .then(result=>{
+                .then(result => {
                     that.ids.push(result.id);
                     return services.postPlaylist({
                         name: 'testGetPlaylists2',
                         description: 'best test!'
                     })
                 })
-                .then(result=> {
+                .then(result => {
                     that.ids.push(result.id);
                     return services.postPlaylist({
                         name: 'testGetPlaylists3',
                         description: 'best test!'
                     })
                 })
-                .then(result=> {
+                .then(result => {
                     that.ids.push(result.id);
                     return services.postPlaylist({
                         name: 'testGetPlaylists4',
                         description: 'best test!'
                     })
                 })
-                .then(result=> {
+                .then(result => {
                         that.ids.push(result.id);
-                        done();
                     }
                 )
                 .catch(err=> err)
+                    .finally(done);
             });
             afterEach(function (done) {
                 let that = this.currentTest;
                 if (that.ids) {
-                    return services.deletePlaylist(that.ids[0])
+                    services.deletePlaylist(that.ids[0])
                         .then(()=> services.deletePlaylist(that.ids[1]))
                         .then(()=> services.deletePlaylist(that.ids[2]))
                         .then(()=> services.deletePlaylist(that.ids[3]))
-                        .then(()=> done())
-                        .catch((err)=> err)
+                        .finally(done);
                 }
             });
             context('on success', function () {
                 it('should return a valid list of playlists', function (done) {
                     setTimeout(function () {
-                        return services.getPlaylists()
+                        services.getPlaylists()
                             .then(result=> {
                                 expect(result).to.have.property('totalResults');
                                 expect(result).to.have.property('playlists').that.is.an('array').to.have.lengthOf.at.least(4);
-
-                                done();
                             })
+                            .finally(done);
                     }, 2000);
                 });
             });
@@ -331,21 +295,19 @@ describe('YamaService', function() {
                 services.postPlaylist({name: that.name, description: that.desc})
                     .then(result=> {
                             that.pId = result.id;
-                            done();
                     })
-                    .catch(err=> done(err))
-            })
+                    .finally(done);
+            });
             afterEach(function (done) {
                 if (this.currentTest.pId) {
                     services.deletePlaylist(this.currentTest.pId)
-                        .then(()=> done())
-                        .catch(err=> done(err))
+                        .finally(done);
                 }
             });
             context('on success', function () {
                 it('should return a valid playlist if it exists', function (done) {
                     let that = this.test;
-                    return services.getPlaylist(this.test.pId)
+                    services.getPlaylist(this.test.pId)
                         .then(result=> {
                             expect(result).to.include({name: that.name, description: that.desc});
 
@@ -354,9 +316,8 @@ describe('YamaService', function() {
                             expect(result).to.have.property('tracks');
 
                             that.pId = result.id;
-
-                            done();
                         })
+                        .finally(done);
                 });
             });
         });
@@ -369,21 +330,19 @@ describe('YamaService', function() {
                 services.postPlaylist({name: that.name, description: that.desc})
                     .then(result=> {
                         that.pId = result.id;
-                        done();
                     })
-                    .catch(err=> done(err))
+                    .finally(done);
             });
             afterEach(function (done) {
                 if (this.currentTest.pId) {
                     services.deletePlaylist(this.currentTest.pId)
-                    .then(()=> done())
-                    .catch(err=> done(err))
+                    .finally(done);
                 }
             });
             context('on success', function () {
                 it('should return the edited playlist if it exists', function (done) {
                     let that = this.test;
-                    return services.putPlaylistMusic(this.test.pId, {
+                    services.putPlaylistMusic(this.test.pId, {
                         artist: 'Cher',
                         name: 'Believe'
                     })
@@ -400,9 +359,8 @@ describe('YamaService', function() {
                             expect(tracks[0]).to.have.property('duration', 240000);
 
                             that.pId = result.id;
-
-                            done();
-                        });
+                        })
+                        .finally(done);
                 });
             });
         });
@@ -413,27 +371,25 @@ describe('YamaService', function() {
                 that.name = 'testDeletePlaylistMusic';
                 that.desc = 'best test!';
                 services.postPlaylist({name: that.name, description: that.desc})
-                    .then(result=> {
+                    .then(result => {
                             that.pId = result.id;
                             return services.putPlaylistMusic(that.pId, {
                                 artist: 'Cher',
                                 name: 'Believe'
                             })
                         })
-                    .then(()=> done())
-                    .catch(err=> done(err))
-            })
+                    .finally(done);
+            });
             afterEach(function (done) {
                 if (this.currentTest.pId) {
                     services.deletePlaylist(this.currentTest.pId)
-                    .then(()=> done())
-                    .catch(err=> done(err))
+                        .finally(done);
                 }
             });
             context('on success', function () {
                 it('should return the edited playlist if it exists', function (done) {
                     let that = this.test;
-                    return services.deletePlaylistMusic(this.test.pId, '32ca187e-ee25-4f18-b7d0-3b6713f24635')
+                    services.deletePlaylistMusic(this.test.pId, '32ca187e-ee25-4f18-b7d0-3b6713f24635')
                         .then(result=> {
                             expect(result).to.include({name: that.name, description: that.desc});
 
@@ -442,9 +398,8 @@ describe('YamaService', function() {
                             expect(result).to.have.property('tracks').to.be.an('array').to.be.empty;
 
                             that.pId = result.id;
-
-                            done();
-                        });
+                        })
+                        .finally(done);
                 });
             });
         });
