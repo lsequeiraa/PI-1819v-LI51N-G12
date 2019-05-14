@@ -10,10 +10,7 @@
 			"request": {
 				"method": "DELETE",
 				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": ""
-				},
+				"body": {},
 				"url": {
 					"raw": "http://localhost:9200/yama",
 					"protocol": "http",
@@ -33,10 +30,7 @@
 			"request": {
 				"method": "PUT",
 				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": ""
-				},
+				"body": {},
 				"url": {
 					"raw": "http://localhost:9200/yama",
 					"protocol": "http",
@@ -313,7 +307,7 @@
 							"",
 							"pm.sendRequest(\"http://localhost:3000/artist/\", function (err, response) {",
 							"    pm.test(\"Body matches string\", function () {",
-							"        pm.expect(response.text()).to.include(\"Please specify an artist name or an mbid of an artist.\");",
+							"        pm.expect(response.text()).to.include(\"No artist name specified.\");",
 							"    });",
 							"    pm.test(\"Status code is 400\", function () {",
 							"        pm.expect(response.code).to.equal(400);",
@@ -438,10 +432,10 @@
 							"});",
 							"pm.sendRequest(\"http://localhost:3000/album/\", function (err, response) {",
 							"    pm.test(\"Body matches string\", function () {",
-							"        pm.expect(response.text()).to.include(\"No artist mbid specified.\");",
+							"        pm.expect(response.text()).to.include(\"Resource Not Found!\");",
 							"    });",
-							"    pm.test(\"Status code is 400\", function () {",
-							"        pm.expect(response.code).to.equal(400);",
+							"    pm.test(\"Status code is 404\", function () {",
+							"        pm.expect(response.code).to.equal(404);",
 							"    });",
 							"",
 							"});",
@@ -740,7 +734,7 @@
 							"",
 							"",
 							"",
-							"pm.sendRequest({",
+							"/*pm.sendRequest({",
 							"    url:\"http://localhost:3000/playlists/\",",
 							"    method:\"Get\"",
 							"}",
@@ -748,7 +742,7 @@
 							"     pm.test(\"Status code is 404\", function () {",
 							"        pm.expect(response.code).to.equal(404);",
 							"    });",
-							"});",
+							"});*/",
 							"pm.test(\"Status code is 200\", function () {",
 							"    pm.response.to.have.status(200);",
 							"});",
@@ -786,7 +780,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "fcced308-8e40-4c6e-8520-9300141cf54d",
+						"id": "283add22-7f50-4156-be92-c28a1388096b",
 						"exec": [
 							"pm.test(\"Test if specific trackname is present\", function(){",
 							"    var jsonData=pm.response.json();",
@@ -906,10 +900,7 @@
 			"request": {
 				"method": "DELETE",
 				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": ""
-				},
+				"body": {},
 				"url": {
 					"raw": "http://{{IP}}:{{PORT}}/playlists/{{playlistID}}/music/{{musicID}}",
 					"protocol": "http",
