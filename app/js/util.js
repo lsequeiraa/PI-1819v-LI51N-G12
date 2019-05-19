@@ -5,7 +5,8 @@ const alertView = Handlebars.compile(require('../views/alert.hbs'))
 
 module.exports = {
     showAlert,
-    checkAuth
+    checkAuth,
+    toggleTab
 }
 
 /**
@@ -24,4 +25,11 @@ async function checkAuth(){
         showAlert(JSON.stringify(body))
     }
     return body
+}
+
+function toggleTab(name){
+    var current = document.getElementsByClassName("active")
+    current[0].className = current[0].className.replace(" active", "");
+    var thisNav = document.getElementById(name)
+    thisNav.className += " active"
 }

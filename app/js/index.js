@@ -3,6 +3,7 @@
 import '../../node_modules/bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap'
 
+const util = require('./util.js')
 let mainView = require('../views/main.html')
 
 document.body.innerHTML = mainView
@@ -37,15 +38,15 @@ const showView = async () => {
     const [view, ...params] = window.location.hash.split('/')
     switch (view) {
     case '#welcome':
-        toggleTab("nav#welcome")
+        util.toggleTab("nav#welcome")
         divMain.innerHTML = require('../views/mainView.html')
         break
     case '#artists':
-        toggleTab("nav#artists")
+        util.toggleTab("nav#artists")
         require('./artistas.js')(divMain)
         break
     case '#playlists':
-        toggleTab("nav#playlists")
+        util.toggleTab("nav#playlists")
         require('./playlists.js')(divMain)
         break
     case '#login':
@@ -59,13 +60,6 @@ const showView = async () => {
         window.location.hash = '#welcome'
         //throw Error(`Unrecognized view: ${view}`)
     }
-}
-
-function toggleTab(name){
-    var current = document.getElementsByClassName("active")
-    current[0].className = current[0].className.replace(" active", "");
-    var thisNav = document.getElementById(name)
-    thisNav.className += " active"
 }
 
 //window.onload = showView
