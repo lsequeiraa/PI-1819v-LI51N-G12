@@ -38,14 +38,15 @@ const showView = async () => {
     switch (view) {
     case '#welcome':
         toggleTab("nav#welcome")
+        divMain.innerHTML = require('../views/mainView.html')
         break
     case '#artists':
-        //require('./ligas.js')(divMain)
         toggleTab("nav#artists")
+        require('./artistas.js')(divMain)
         break
     case '#playlists':
-        //require('./grupos.js')(divMain)
         toggleTab("nav#playlists")
+        require('./playlists.js')(divMain)
         break
     case '#login':
         //require('./login.js')(divMain,showLogin)
@@ -69,3 +70,11 @@ function toggleTab(name){
 
 //window.onload = showView
 //window.onhashchange = showView
+
+
+/*function init(){
+    gapi.client.setApiKey('AIzaSyBY0CSv1VNjcwsTv9cHEFpa6kyiQ30w3xM')
+    gapi.client.load('youtube','v3', function(){
+        
+    })
+}*/
