@@ -28,8 +28,8 @@ async function checkAuth(){
 }
 
 function toggleTab(name){
-    var current = document.getElementsByClassName("active")
-    current[0].className = current[0].className.replace(" active", "");
+    var current = document.getElementsByClassName('active')
+    current[0].className = current[0].className.replace(' active', '');
     var thisNav = document.getElementById(name)
-    thisNav.className += " active"
+    thisNav.className += ' active'
 }
