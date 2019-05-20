@@ -75,9 +75,12 @@ module.exports = function showArtists(mainDiv){
                 let artistButton = document.getElementsByName('button_artist')
                 artistButton[0].addEventListener('click', getArtistTopAlbums.bind(null,artistMBID))
                 var list= document.getElementsByName('button_track')
-                let playlistPut = require('./playlists.js')
+                let playlistPutMusic = require('./playlists.js').addMusic
                 for (var i = 0; i < list.length; i++) {
-                    list[i].addEventListener('click', playlistPut.bind(null,mainDiv,album.album.artist,list[i].text))
+                    list[i].addEventListener('click', playlistPutMusic.bind(
+                        null,album.album.artist,
+                        list[i].attributes.trackName.value,
+                        list[i].attributes.playlistID.value))
                 }
             })
             .catch((err) => util.showAlert(err,'danger'))
