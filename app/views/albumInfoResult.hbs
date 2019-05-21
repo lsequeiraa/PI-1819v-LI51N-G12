@@ -19,7 +19,7 @@
                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                 {{#if ../playlists.playlists}}
                                     {{#each ../playlists.playlists}}
-                                        <button class="dropdown-item" name="button_track" trackName={{../name}} playlistID={{id}}>{{name}}</a>
+                                        <button class="dropdown-item" name="button_track" trackName="{{../name}}" playlistID={{id}}>{{name}}</a>
                                     {{/each}}
                                 {{else}}
                                     <p>No Playlists</p>
