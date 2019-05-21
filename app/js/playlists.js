@@ -18,7 +18,7 @@ function addMusic(artist,trackName, playlistID){
     fetch('http://localhost:3000/playlists/'+playlistID+'/music',
         {
             method: 'PUT',
-            body: JSON.stringify({artist:artist,name:trackName}),
+            body: JSON.stringify({artist:artist,name:trackName.normalize('NFD').replace(/[\u0300-\u036f]/g, '')}),
             mode: 'cors'
         })
         .then((resp)=>{
