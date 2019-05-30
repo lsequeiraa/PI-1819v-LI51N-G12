@@ -47,7 +47,7 @@ const showView = async () => {
         break
     case '#playlists':
         util.toggleTab("nav#playlists")
-        require('./playlists.js')(divMain)
+        require('./playlists.js').mainView(divMain)
         break
     case '#login':
         //require('./login.js')(divMain,showLogin)
