@@ -4,12 +4,14 @@
         <tr>            
             <th>Name</th>
             <th>Description</th>
+            <th>Total Duration</th>
         </tr>
         <body>
             {{#each .}}
                 <tr>
                     <td>{{name}}</td>
                     <td>{{description}}</td>
+                    <td>{{totalDuration}}</td>
                     <td>
                         <div class="dropdown">
                             <button class="btn btn-secundary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
