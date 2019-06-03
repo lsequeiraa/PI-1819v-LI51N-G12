@@ -1,0 +1,40 @@
+<div class="modal fade" id="playlistModal" tabindex="-1" role="dialog" aria-labelledby="playlistModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="playlistModalLongTitle">{{name}}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h5>Description: {{description}}</h5>
+                <h5>Total Duration: {{totalDuration}} (in seconds)</h5>
+                <div class="table-responsive">
+                    <table class="table table-striped table-sm">
+                        <thead>
+                        <tr>            
+                            <th>Name</th>
+                            <th>MBID</th>
+                            <th>Duration</th>
+                        </tr>
+                        <body>
+                            {{#each this.tracks}}
+                                <tr>
+                                    <td>{{name}}</td>
+                                    <td>{{mbid}}</td>
+                                    <td>{{duration}}</td>
+                                </tr>
+                            {{/each}}
+                        </body>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                {{!-- <button type="button" class="btn btn-primary">Save changes</button> --}}
+            </div>
+        </div>
+    </div>
+</div>

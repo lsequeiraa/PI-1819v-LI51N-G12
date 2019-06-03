@@ -3,6 +3,7 @@
 const util = require('./util.js')
 const Handlebars = require('handlebars/dist/handlebars')
 const playlistsResults = Handlebars.compile(require('../views/playlistsResults.hbs'))
+const playlistView = Handlebars.compile(require('../views/playlistSingleViewModal.hbs'))
 
 module.exports = {
     mainView,
@@ -12,6 +13,7 @@ module.exports = {
 function mainView(mainDiv){
     mainDiv.innerHTML = require('../views/playlistsMainView.html')
     const divPlaylistsResults = document.getElementById('divPlaylistsResults')
+    const divPlaylistModal = document.getElementById('divPlaylistModal')
     let inputName = document.getElementById('newPlayName')
     let inputDescription = document.getElementById('newPlayDescription')
 
@@ -19,21 +21,64 @@ function mainView(mainDiv){
         .getElementById('newPlaylistButton')
         .addEventListener('click', postPlaylist)
 
+    getPlaylists()
 
-    fetch('http://localhost:3000/playlists', {mode: 'cors'})
+    function getPlaylists(){
+        fetch('http://localhost:3000/playlists', {mode: 'cors'})
+            .then((resp)=>{
+                if(resp.ok) return resp.json()
+                return Promise.reject(resp.statusText)
+            })
+            .then(playlists => {
+                let view = playlistsResults(playlists.playlists)
+                divPlaylistsResults.innerHTML = view
+                var viewList= document.getElementsByName('button_view_playlist')
+                for (var i = 0; i < viewList.length; i++) {
+                    viewList[i].addEventListener('click', getPlaylist.bind(null,playlists.playlists[i].id))
+                }
+                var updateList = document.getElementsByName('button_update_playlist')
+                var nameUpdateList = document.getElementsByName('updatePlayName')
+                var descriptionUpdateList = document.getElementsByName('updatePlayDescription')
+                for (var i = 0; i < updateList.length; i++) {
+                    updateList[i].addEventListener('click', putPlaylist.bind(null,playlists.playlists[i].id, nameUpdateList[i], descriptionUpdateList[i]))
+                }
+            })
+            .catch((err) => util.showAlert(err,'danger'))
+    }
+
+    function getPlaylist(playlistID){
+        fetch('http://localhost:3000/playlists/'+playlistID, {mode: 'cors'})
         .then((resp)=>{
             if(resp.ok) return resp.json()
             return Promise.reject(resp.statusText)
         })
-        .then(playlists => {
-            let view = playlistsResults(playlists.playlists)
-            divPlaylistsResults.innerHTML = view
-            /*var list= document.getElementsByName('button_artist')
-            for (var i = 0; i < list.length; i++) {
-                list[i].addEventListener('click', getArtistTopAlbums.bind(null,list[i].text))
-            }*/
+        .then(playlist => {
+            let view = playlistView(playlist)
+            divPlaylistModal.innerHTML = view
+            $('#playlistModal').modal('show')
+        })
+    }
+
+    function putPlaylist(playlistID, newName, newDescription){
+        if(!newName.value || !newDescription.value) return util.showAlert('Please fill all the fields.','danger')
+        fetch('http://localhost:3000/playlists/'+playlistID,
+        {
+            method: 'PUT',
+            headers:{
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({name:newName.value,description:newDescription.value}),
+            mode: 'cors'
+        })
+        .then((resp)=>{
+            if(resp.ok)  {
+                util.showAlert("Playlist successfully edited!",'success')
+                return setTimeout(getPlaylists,1000)
+            }
+            return Promise.reject(resp.statusText)
         })
         .catch((err) => util.showAlert(err,'danger'))
+    }
 
     function postPlaylist(){
         if(!inputName.value || !inputDescription.value) return util.showAlert('Please fill all the fields.','danger')
@@ -47,19 +92,15 @@ function mainView(mainDiv){
                 mode: 'cors'
             })
             .then((resp)=>{
-                if(resp.ok) return util.showAlert("Playlist created successfully!",'success')
+                if(resp.ok)  {
+                    util.showAlert("Playlist created successfully!",'success')
+                    return setTimeout(getPlaylists,1000)
+                }
                 return Promise.reject(resp.statusText)
             })
             .catch((err) => util.showAlert(err,'danger'))
     }
 }
-
-/*module.exports = function showArtists(mainDiv,artist,name){
-    mainDiv.innerHTML = require('../views/playlistsMainView.html')
-    console.log('artist: '+artist+' name: '+name);
-    util.toggleTab('nav#playlists')
-
-}*/
 
 function addMusic(artist,trackName, playlistID){
     fetch('http://localhost:3000/playlists/'+playlistID+'/music',
