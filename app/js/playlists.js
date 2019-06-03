@@ -12,6 +12,13 @@ module.exports = {
 function mainView(mainDiv){
     mainDiv.innerHTML = require('../views/playlistsMainView.html')
     const divPlaylistsResults = document.getElementById('divPlaylistsResults')
+    let inputName = document.getElementById('newPlayName')
+    let inputDescription = document.getElementById('newPlayDescription')
+
+    document
+        .getElementById('newPlaylistButton')
+        .addEventListener('click', postPlaylist)
+
 
     fetch('http://localhost:3000/playlists', {mode: 'cors'})
         .then((resp)=>{
@@ -27,6 +34,24 @@ function mainView(mainDiv){
             }*/
         })
         .catch((err) => util.showAlert(err,'danger'))
+
+    function postPlaylist(){
+        if(!inputName.value || !inputDescription.value) return util.showAlert('Please fill all the fields.','danger')
+        fetch('http://localhost:3000/playlists',
+            {
+                method: 'POST',
+                headers:{
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({name:inputName.value,description:inputDescription.value}),
+                mode: 'cors'
+            })
+            .then((resp)=>{
+                if(resp.ok) return util.showAlert("Playlist created successfully!",'success')
+                return Promise.reject(resp.statusText)
+            })
+            .catch((err) => util.showAlert(err,'danger'))
+    }
 }
 
 /*module.exports = function showArtists(mainDiv,artist,name){

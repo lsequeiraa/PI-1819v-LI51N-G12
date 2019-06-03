@@ -1,4 +1,22 @@
 <h5>Look at all your playlists:</h5>
+<div class="dropdown">
+    <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        Create New Playlist
+    </button>
+    <form class="dropdown-menu p-1">
+        <div class="form-inline">
+            <div class="col-sm-5">
+                <input type="text" class="form-control" id="newPlayName" placeholder="Name" required>
+            </div>
+            <div class="col-xs-6">
+                <input type="text" class="form-control" id="newPlayDescription" placeholder="Description" required>
+            </div>
+            <div class="col-xs-6">
+                <button id="newPlaylistButton" type="submit" class="btn btn-primary">Create</button>
+            </div>
+        </div>
+    </form>
+</div>
 
 <p></p>
 <div id="divPlaylistsResults">
