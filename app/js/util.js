@@ -19,7 +19,7 @@ function showAlert(message, type) {
 }
 
 async function checkAuth(){
-    const resp = await fetch('/auth/session')
+    const resp = await fetch('http://localhost:3000/auth/session')
     const body = await resp.json() // body => {auth, username}
     if(resp.status != 200) {
         showAlert(JSON.stringify(body))
