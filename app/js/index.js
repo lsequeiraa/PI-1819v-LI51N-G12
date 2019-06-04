@@ -51,9 +51,11 @@ const showView = async () => {
         require('./playlists.js').mainView(divMain)
         break
     case '#login':
+        //util.toggleTab("nav#login")
         require('./login.js')(divMain,showLogin)
         break
     case '#logout':
+        //util.toggleTab("nav#logout")
         require('./logout.js')(divMain,showLogin)
         break
     default:
