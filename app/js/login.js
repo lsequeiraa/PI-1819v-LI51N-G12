@@ -36,13 +36,9 @@ function signupHander() {
 }
 
 async function loginHander() {
-    const url = 'http://localhost:3000/auth/login'
+    const url = `http://localhost:3000/auth/login?username=${txtUsername.value}&password=${txtPassword.value}`;
     const options = {
         method: 'POST',
-        body: JSON.stringify({
-            'username': txtUsername.value,
-            'password': txtPassword.value
-        }),
         mode: 'cors',
         headers: {
             'Content-Type': 'application/json'
