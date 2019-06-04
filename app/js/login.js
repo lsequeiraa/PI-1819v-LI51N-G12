@@ -40,13 +40,13 @@ module.exports = (divMain, getAuthAndInsertNavbar) => {
 
     async function loginHander(ev) {
         ev.preventDefault()
-        const url = 'http://localhost:3000/auth/login'
+        const url = `http://localhost:3000/auth/login?username=${txtUsername.value}&password=${txtPassword.value}`
         const options = {
             method: 'POST',
-            body: JSON.stringify({
+            /*body: JSON.stringify({
                 'username': txtUsername.value,
                 'password': txtPassword.value
-            }),
+            }),*/
             headers: {
                 'Content-Type': 'application/json'
             }
