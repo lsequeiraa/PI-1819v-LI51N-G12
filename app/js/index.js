@@ -5,6 +5,8 @@ import 'bootstrap'
 
 const util = require('./util.js')
 let mainView = require('../views/main.html')
+const Handlebars = require('handlebars/dist/handlebars')
+const loginNavbarView = Handlebars.compile(require('../views/loginNavbarView.hbs'))
 
 document.body.innerHTML = mainView
 const divTitle = document.getElementById('h1Title')
