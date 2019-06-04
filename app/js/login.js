@@ -31,6 +31,7 @@ function signupHander() {
         .then((resp) => {
             if(!resp.ok) return Promise.reject(resp.status + ': ' + resp.statusText)
             util.showLogin()
+            util.showAlert('Signed up with success!', 'success');
         })
         .catch(err => util.showAlert(err, 'danger'))
 }
@@ -48,6 +49,7 @@ async function loginHander() {
     try{
         if(resp.ok){
             util.showLogin()
+            util.showAlert('Logged in with success!', 'success');
         } else {
             const body = await resp.json()
             util.showAlert(`${resp.status} ${resp.statusText}: ${JSON.stringify(body)}`)
