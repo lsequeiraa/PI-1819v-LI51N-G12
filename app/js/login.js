@@ -11,10 +11,10 @@ module.exports = {
 
 //divMain.innerHTML = loginView
 
-const txtPassword = document.getElementById('userPassword')
-const txtUsername = document.getElementById('userName')
-
 function signupHander() {
+    let txtPassword = document.getElementById('userPassword')
+    let txtUsername = document.getElementById('userName')
+
     const url = 'http://localhost:3000/auth/register'
     const options = {
         method: 'POST',
@@ -36,6 +36,9 @@ function signupHander() {
 }
 
 async function loginHander() {
+    let txtPassword = document.getElementById('userPassword')
+    let txtUsername = document.getElementById('userName')
+    
     const url = `http://localhost:3000/auth/login?username=${txtUsername.value}&password=${txtPassword.value}`;
     const options = {
         method: 'POST',
