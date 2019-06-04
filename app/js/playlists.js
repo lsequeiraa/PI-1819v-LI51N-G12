@@ -11,17 +11,26 @@ module.exports = {
 }
 
 function mainView(mainDiv){
+
+    
     mainDiv.innerHTML = require('../views/playlistsMainView.html')
     const divPlaylistsResults = document.getElementById('divPlaylistsResults')
     const divPlaylistModal = document.getElementById('divPlaylistModal')
     let inputName = document.getElementById('newPlayName')
     let inputDescription = document.getElementById('newPlayDescription')
-
+    
     document
         .getElementById('newPlaylistButton')
         .addEventListener('click', postPlaylist)
-
-    getPlaylists()
+    
+    util.checkAuth()
+        .then((body)=>{
+            if(body.auth) getPlaylists()
+            else{
+                window.location.hash = '#welcome'
+                util.showAlert('Please login to use playlists','danger')
+            } 
+        })
 
     function getPlaylists(){
         fetch('http://localhost:3000/playlists', {mode: 'cors'})

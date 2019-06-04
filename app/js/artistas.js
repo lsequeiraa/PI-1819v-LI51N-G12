@@ -57,10 +57,16 @@ module.exports = function showArtists(mainDiv){
             fetch('http://localhost:3000/playlists')
         ])
             .then((array)=>{
+                let ok = true;
+                let text = '';
                 array.forEach(resp => {
-                    if(!resp.ok) return Promise.reject(resp.statusText)              
+                    if(!resp.ok){
+                        ok = false;
+                        text = resp.statusText
+                    }
                 });
-                return array
+                if(!ok) return Promise.reject(text)   
+                return array  
             })
             .then(async([aa, bb]) => {
                 const a = await aa.json();
