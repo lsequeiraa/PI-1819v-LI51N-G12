@@ -18,7 +18,7 @@ module.exports = (divMain, getAuthAndInsertNavbar) => {
 
     function signupHander(ev) {
         ev.preventDefault()
-        const url = 'http://localhost:3000/auth/signup'
+        const url = 'http://localhost:3000/auth/register'
         const options = {
             method: 'POST',
             body: JSON.stringify({
