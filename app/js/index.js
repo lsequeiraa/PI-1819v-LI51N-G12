@@ -5,8 +5,6 @@ import 'bootstrap'
 
 const util = require('./util.js')
 let mainView = require('../views/main.html')
-const Handlebars = require('handlebars/dist/handlebars')
-const loginNavbarView = Handlebars.compile(require('../views/loginNavbarView.hbs'))
 
 document.body.innerHTML = mainView
 const divTitle = document.getElementById('h1Title')
@@ -20,20 +18,29 @@ async function joke(){
 }
 
 const divMain = document.getElementById('divMain')
-const divLogin = document.getElementById('login')
-showLogin()
+util.showLogin()
     .then(() => {
         window.onload = showView
         window.onhashchange = showView
     })
     .catch((err) => utils.showAlert(err,'danger'))
 
-async function showLogin() {
+/*async function showLogin() {
     util.checkAuth()
         .then((body)=>{
             divLogin.innerHTML = loginNavbarView(body)
+            if(!body.auth){
+                document.getElementById('button_login')
+                    .addEventListener('click', require('./login.js').loginHander)
+                document.getElementById('button_signup')
+                    .addEventListener('click', require('./login.js').signupHander)
+            }
+            else{
+                document.getElementById('button_logout')
+                    .addEventListener('click', require('./logout.js'))
+            }
         })
-}
+}*/
 
 const showView = async () => {
     const [view, ...params] = window.location.hash.split('/')
@@ -52,11 +59,11 @@ const showView = async () => {
         break
     case '#login':
         //util.toggleTab("nav#login")
-        require('./login.js')(divMain,showLogin)
+        //require('./login.js')(divMain,showLogin)
         break
     case '#logout':
         //util.toggleTab("nav#logout")
-        require('./logout.js')(divMain,showLogin)
+        //require('./logout.js')(divMain,showLogin)
         break
     default:
     // Unrecognized view.
