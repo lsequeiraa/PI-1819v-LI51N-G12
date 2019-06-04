@@ -32,6 +32,16 @@ async function showLogin() {
     util.checkAuth()
         .then((body)=>{
             divLogin.innerHTML = loginNavbarView(body)
+            if(!body.auth){
+                document.getElementById('button_login')
+                    .addEventListener('click', require('./login.js').loginHander)
+                document.getElementById('button_signup')
+                    .addEventListener('click', require('./login.js').signupHander)
+            }
+            else{
+                document.getElementById('button_logout')
+                    .addEventListener('click', require('./logout.js'))
+            }
         })
 }
 
@@ -52,11 +62,11 @@ const showView = async () => {
         break
     case '#login':
         //util.toggleTab("nav#login")
-        require('./login.js')(divMain,showLogin)
+        //require('./login.js')(divMain,showLogin)
         break
     case '#logout':
         //util.toggleTab("nav#logout")
-        require('./logout.js')(divMain,showLogin)
+        //require('./logout.js')(divMain,showLogin)
         break
     default:
     // Unrecognized view.

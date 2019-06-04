@@ -1,9 +1,28 @@
 <ul class="nav nav-tabs">
     <li class="nav-item" id="liAuth">
         {{#if auth}}
-            <a id="nav#logout" href="#logout" class="nav-link">Logout</a>
+            <a type="button" class="nav-link text-primary" id="button_logout" >Logout</a>
+            <!--<a id="nav#logout" href="#logout" class="nav-link">Logout</a>-->
         {{else}}
-            <a id="nav#login" href="#login" class="nav-link">Login</a>
+        <!-- <a id="nav#login" href="#login" class="nav-link">Login</a>-->
+            <div class="dropdown">
+                <button class="btn btn-secundary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Login
+                </button>
+                <form class="dropdown-menu p-4" aria-labelledby="dropdownMenuButton">
+                    <div class="form-inline">
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="userName" placeholder="Username" style="margin-bottom: 5px;" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="password" class="form-control" id="userPassword" placeholder="Password" style="margin-bottom: 5px;" required>
+                        </div>
+                            <button type="submit" class="btn btn-primary" id="button_signup" style="margin-left: 5px;">SignUp</a>
+                            <button type="submit" class="btn btn-primary" id="button_login" style="margin-left: 5px;">Login</a>
+                        
+                    </div>
+                </form>
+            </div>
         {{/if}}
 
     </li>
