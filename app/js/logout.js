@@ -1,6 +1,6 @@
 'use strict'
 
-const utils = require('./util.js')
+const util = require('./util.js')
 
 module.exports = () => {
     console.log('HELLO!!!!');
@@ -9,8 +9,7 @@ module.exports = () => {
     fetch(url, {mode: 'cors'})
         .then((resp) => {
             if(!resp.ok) return Promise.reject(resp.status + ': ' + resp.statusText)
-            window.location.hash = '#welcome'
-            getAuthAndInsertNavbar()
+            util.showLogin()
         })
         .catch(err => utils.showAlert(err, 'danger'))
 };

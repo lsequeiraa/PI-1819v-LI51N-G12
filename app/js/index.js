@@ -5,8 +5,6 @@ import 'bootstrap'
 
 const util = require('./util.js')
 let mainView = require('../views/main.html')
-const Handlebars = require('handlebars/dist/handlebars')
-const loginNavbarView = Handlebars.compile(require('../views/loginNavbarView.hbs'))
 
 document.body.innerHTML = mainView
 const divTitle = document.getElementById('h1Title')
@@ -20,15 +18,14 @@ async function joke(){
 }
 
 const divMain = document.getElementById('divMain')
-const divLogin = document.getElementById('login')
-showLogin()
+util.showLogin()
     .then(() => {
         window.onload = showView
         window.onhashchange = showView
     })
     .catch((err) => utils.showAlert(err,'danger'))
 
-async function showLogin() {
+/*async function showLogin() {
     util.checkAuth()
         .then((body)=>{
             divLogin.innerHTML = loginNavbarView(body)
@@ -43,7 +40,7 @@ async function showLogin() {
                     .addEventListener('click', require('./logout.js'))
             }
         })
-}
+}*/
 
 const showView = async () => {
     const [view, ...params] = window.location.hash.split('/')

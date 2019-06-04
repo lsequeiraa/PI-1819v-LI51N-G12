@@ -30,8 +30,7 @@ function signupHander() {
     fetch(url, options)
         .then((resp) => {
             if(!resp.ok) return Promise.reject(resp.status + ': ' + resp.statusText)
-            window.location.hash = '#welcome'
-            getAuthAndInsertNavbar()
+            util.showLogin()
         })
         .catch(err => util.showAlert(err, 'danger'))
 }
@@ -52,8 +51,7 @@ async function loginHander() {
     const resp = await fetch(url, options)
     try{
         if(resp.ok){
-            window.location.hash = '#welcome'
-            getAuthAndInsertNavbar()
+            util.showLogin()
         } else {
             const body = await resp.json()
             util.showAlert(`${resp.status} ${resp.statusText}: ${JSON.stringify(body)}`)
