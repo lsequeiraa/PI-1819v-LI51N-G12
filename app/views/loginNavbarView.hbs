@@ -1,0 +1,12 @@
+<li class="nav-item" id="liAuth">
+    {{#if auth}}
+        <a id="nav#logout" href="#logout" class="nav-link">Logout</a>
+    {{else}}
+        <a id="nav#login" href="#login" class="nav-link">Login</a>
+    {{/if}}
+    {{#if auth}}
+        <span class="navbar-text">
+            Username: {{username}}
+        </span>
+    {{/if}}
+</li>

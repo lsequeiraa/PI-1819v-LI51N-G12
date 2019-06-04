@@ -27,11 +27,10 @@ showLogin()
     .catch((err) => utils.showAlert(err,'danger'))
 
 async function showLogin() {
-    return Promise.resolve()
-    /*utils.checkAuth()
+    util.checkAuth()
         .then((body)=>{
             divLogin.innerHTML = loginNavbarView(body)
-        })*/
+        })
 }
 
 const showView = async () => {
@@ -50,10 +49,10 @@ const showView = async () => {
         require('./playlists.js').mainView(divMain)
         break
     case '#login':
-        //require('./login.js')(divMain,showLogin)
+        require('./login.js')(divMain,showLogin)
         break
     case '#logout':
-        //require('./logout.js')(divMain,showLogin)
+        require('./logout.js')(divMain,showLogin)
         break
     default:
     // Unrecognized view.
