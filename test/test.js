@@ -111,7 +111,7 @@ describe('YamaService', function() {
     });
 
     describe('Yama-DB', function() {
-        describe('postPlaylist(body)', function () {
+        describe('postPlaylist(uId, body)', function () {
             context('on success', function () {
                 afterEach(function (done) {
                     if (this.currentTest.pId) {
@@ -124,7 +124,7 @@ describe('YamaService', function() {
 
                     let name = 'testPostPlaying';
                     let desc = 'best test!';
-                    services.postPlaylist({name: name, description: desc})
+                    services.postPlaylist("123test",{name: name, description: desc})
                         .then((result)=> {
                             expect(result).to.include({name: name, description: desc});
 
@@ -140,7 +140,7 @@ describe('YamaService', function() {
             context('on failure', function () {
                 it('should send an error if no name is provided', function (done) {
                     let desc = 'best test!';
-                    services.postPlaylist({description: desc})
+                    services.postPlaylist("123test", {description: desc})
                         .catch(err => {
                             should.exist(err);
                             expect(err).to.have.property('code');
@@ -149,7 +149,7 @@ describe('YamaService', function() {
                 });
                 it('should send an error if no description is provided', function (done) {
                     let name = 'testPostPlaying';
-                    services.postPlaylist({name: name})
+                    services.postPlaylist("123test", {name: name})
                         .catch(err => {
                             should.exist(err);
                             expect(err).to.have.property('code');
@@ -157,7 +157,7 @@ describe('YamaService', function() {
                         .finally(done);
                 });
                 it('should send an error if no body is provided', function (done) {
-                    services.postPlaylist(null)
+                    services.postPlaylist("123test", null)
                         .catch(err => {
                             should.exist(err);
                             expect(err).to.have.property('code');
@@ -171,7 +171,7 @@ describe('YamaService', function() {
             beforeEach(function (done) {
                 let that = this.currentTest;
 
-                services.postPlaylist({
+                services.postPlaylist("123test", {
                     name: 'testPutPlaylist',
                     description: 'best test!'
                 })
@@ -226,32 +226,32 @@ describe('YamaService', function() {
             });
         });
 
-        describe('getPlaylists()', function () {
+        describe('getPlaylists(uId)', function () {
             beforeEach(function (done) {
                 let that = this.currentTest;
                 that.ids = [];
 
-                services.postPlaylist({
+                services.postPlaylist("123test", {
                     name: 'testGetPlaylists1',
                     description: 'best test!'
                 })
                 .then(result => {
                     that.ids.push(result.id);
-                    return services.postPlaylist({
+                    return services.postPlaylist("123test", {
                         name: 'testGetPlaylists2',
                         description: 'best test!'
                     })
                 })
                 .then(result => {
                     that.ids.push(result.id);
-                    return services.postPlaylist({
+                    return services.postPlaylist("123test", {
                         name: 'testGetPlaylists3',
                         description: 'best test!'
                     })
                 })
                 .then(result => {
                     that.ids.push(result.id);
-                    return services.postPlaylist({
+                    return services.postPlaylist("123test", {
                         name: 'testGetPlaylists4',
                         description: 'best test!'
                     })
@@ -276,7 +276,7 @@ describe('YamaService', function() {
             context('on success', function () {
                 it('should return a valid list of playlists', function (done) {
                     setTimeout(function () {
-                        services.getPlaylists()
+                        services.getPlaylists("123test")
                             .then(result=> {
                                 expect(result).to.have.property('totalResults');
                                 expect(result).to.have.property('playlists').that.is.an('array').to.have.lengthOf.at.least(4);
@@ -292,7 +292,7 @@ describe('YamaService', function() {
                 let that = this.currentTest;
                 that.name = 'testPutPlaylist';
                 that.desc = 'best test!';
-                services.postPlaylist({name: that.name, description: that.desc})
+                services.postPlaylist("123test", {name: that.name, description: that.desc})
                     .then(result=> {
                             that.pId = result.id;
                     })
@@ -327,7 +327,7 @@ describe('YamaService', function() {
                 let that = this.currentTest;
                 that.name = 'testPutPlaylistMusic';
                 that.desc = 'best test!';
-                services.postPlaylist({name: that.name, description: that.desc})
+                services.postPlaylist("123test", {name: that.name, description: that.desc})
                     .then(result=> {
                         that.pId = result.id;
                     })
@@ -370,7 +370,7 @@ describe('YamaService', function() {
                 let that = this.currentTest;
                 that.name = 'testDeletePlaylistMusic';
                 that.desc = 'best test!';
-                services.postPlaylist({name: that.name, description: that.desc})
+                services.postPlaylist("123test", {name: that.name, description: that.desc})
                     .then(result => {
                             that.pId = result.id;
                             return services.putPlaylistMusic(that.pId, {
