@@ -89,7 +89,7 @@ describe('YamaService', function() {
                             let tracks = result.tracks;
 
                             expect(result).to.include({name: 'Believe', artist: 'Cher', mbid: '63b3a8ca-26f2-4e2b-b867-647a6ec2bebd'});
-                            expect(tracks[0]).to.include({name: 'Believe', duration: '240'});
+                            expect(tracks[0]).to.include({name: 'Believe', duration: '230'});
                         })
                         .finally(done);
                 });
@@ -350,13 +350,13 @@ describe('YamaService', function() {
                             expect(result).to.include({name: that.name, description: that.desc});
 
                             expect(result).to.have.property('id', that.pId);
-                            expect(result).to.have.property('totalDuration', 240000);
+                            expect(result).to.have.property('totalDuration', 230000);
                             expect(result).to.have.property('tracks').to.be.an('array');
 
                             let tracks = result.tracks;
                             expect(tracks[0]).to.have.property('mbid', '32ca187e-ee25-4f18-b7d0-3b6713f24635');
                             expect(tracks[0]).to.have.property('name', 'Believe');
-                            expect(tracks[0]).to.have.property('duration', 240000);
+                            expect(tracks[0]).to.have.property('duration', 230000);
 
                             that.pId = result.id;
                         })
