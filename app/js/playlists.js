@@ -10,9 +10,9 @@ module.exports = {
     addMusic
 }
 
-function mainView(mainDiv){
+function mainView(){
 
-    
+    let mainDiv = document.getElementById('divMain')
     mainDiv.innerHTML = require('../views/playlistsMainView.html')
     const divPlaylistsResults = document.getElementById('divPlaylistsResults')
     const divPlaylistModal = document.getElementById('divPlaylistModal')
@@ -86,8 +86,6 @@ function mainView(mainDiv){
                         modal.modal('hide')
                         getPlaylists()
                         getPlaylist(playlistID)
-                        //setTimeout(()=>{getPlaylists; setTimeout(getPlaylist.bind(null,playlistID))},1000)
-                        //getPlaylist(playlistID)
                     },1000)
                 }
                 return Promise.reject(resp.statusText)

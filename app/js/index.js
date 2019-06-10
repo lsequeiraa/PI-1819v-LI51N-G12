@@ -25,23 +25,6 @@ util.showLogin()
     })
     .catch((err) => utils.showAlert(err,'danger'))
 
-/*async function showLogin() {
-    util.checkAuth()
-        .then((body)=>{
-            divLogin.innerHTML = loginNavbarView(body)
-            if(!body.auth){
-                document.getElementById('button_login')
-                    .addEventListener('click', require('./login.js').loginHander)
-                document.getElementById('button_signup')
-                    .addEventListener('click', require('./login.js').signupHander)
-            }
-            else{
-                document.getElementById('button_logout')
-                    .addEventListener('click', require('./logout.js'))
-            }
-        })
-}*/
-
 const showView = async () => {
     const [view, ...params] = window.location.hash.split('/')
     switch (view) {
@@ -51,34 +34,13 @@ const showView = async () => {
         break
     case '#artists':
         util.toggleTab("nav#artists")
-        require('./artistas.js')(divMain)
+        require('./artistas.js')()
         break
     case '#playlists':
         util.toggleTab("nav#playlists")
-        require('./playlists.js').mainView(divMain)
-        break
-    case '#login':
-        //util.toggleTab("nav#login")
-        //require('./login.js')(divMain,showLogin)
-        break
-    case '#logout':
-        //util.toggleTab("nav#logout")
-        //require('./logout.js')(divMain,showLogin)
+        require('./playlists.js').mainView()
         break
     default:
-    // Unrecognized view.
         window.location.hash = '#welcome'
-        //throw Error(`Unrecognized view: ${view}`)
     }
 }
-
-//window.onload = showView
-//window.onhashchange = showView
-
-
-/*function init(){
-    gapi.client.setApiKey('AIzaSyBY0CSv1VNjcwsTv9cHEFpa6kyiQ30w3xM')
-    gapi.client.load('youtube','v3', function(){
-        
-    })
-}*/

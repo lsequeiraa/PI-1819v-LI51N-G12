@@ -7,7 +7,8 @@ const topAlbumsSearchResult = Handlebars.compile(require('../views/topAlbumsSear
 const albumInfoResult = Handlebars.compile(require('../views/albumInfoResult.hbs'))
 
 
-module.exports = function showArtists(mainDiv){
+module.exports = function showArtists(){
+    let mainDiv = document.getElementById('divMain')
     mainDiv.innerHTML = require('../views/artistasMainView.html')
     let input = document.getElementById('inputArtistasName')
     const divArtistasResults = document.getElementById('divArtistasResults')

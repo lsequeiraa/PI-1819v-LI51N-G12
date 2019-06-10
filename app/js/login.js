@@ -1,15 +1,11 @@
 'use strict'
 
 const util = require('./util.js')
-//const loginView = require('../views/login.html')
 
 module.exports = {
     signupHander,
     loginHander
 }
-
-
-//divMain.innerHTML = loginView
 
 function signupHander() {
     let txtPassword = document.getElementById('userPassword')
