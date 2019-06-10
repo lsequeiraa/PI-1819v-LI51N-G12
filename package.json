@@ -7,9 +7,10 @@
     "lib": "lib"
   },
   "scripts": {
-    "build": "webpack",
-    "test": "mocha",
-    "start": "webpack-dev-server --open"
+    "yama": "node lib/yama-server.js",
+    "fill": "node lib/fillYama.js",
+    "start": "webpack",
+    "test": "mocha"
   },
   "repository": {
     "type": "git",
